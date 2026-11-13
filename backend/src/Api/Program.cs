@@ -34,6 +34,18 @@ if (app.Environment.IsDevelopment())
 
 app.UseCors("Frontend");
 app.UseAuthorization();
+
+// Friendly landing page: the API root used to return 404, which looked
+// like the site was down. Now it explains itself.
+app.MapGet("/", () => Results.Json(new
+{
+    service = "NasaMoon API",
+    status = "ok",
+    missions = "/api/missions",
+    docs = "Use GET /api/missions — try /api/missions?search=peregrine"
+}));
+app.MapGet("/health", () => Results.Json(new { status = "healthy" }));
+
 app.MapControllers();
 
 // Create the tables on first run (fresh database, e.g. Neon) and then
