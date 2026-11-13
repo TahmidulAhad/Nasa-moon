@@ -1,3 +1,4 @@
+using Microsoft.EntityFrameworkCore;
 using NasaMoon.Application;
 using NasaMoon.Infrastructure;
 using NasaMoon.Infrastructure.SeedData;
@@ -35,11 +36,13 @@ app.UseCors("Frontend");
 app.UseAuthorization();
 app.MapControllers();
 
-// Seed the 15 CLPS missions + payloads from the frontend's static data
-// on first run (only when the database is empty).
+// Create the tables on first run (fresh database, e.g. Neon) and then
+// seed the 15 CLPS missions + payloads from the frontend's static data
+// (only when the database is empty).
 using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<NasaMoonDbContext>();
+    await db.Database.MigrateAsync();
     await DbSeeder.SeedAsync(db);
 }
 

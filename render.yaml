@@ -1,0 +1,16 @@
+# Render blueprint for the NasaMoon API (free tier, Docker).
+# Create the service from this repo on Render (or use "New + > Web Service"
+# and point it at backend/Dockerfile manually). Set the env var below from
+# the Neon dashboard — never commit a real password here.
+services:
+  - type: web
+    name: nasamoon-api
+    env: docker
+    dockerfilePath: ./backend/Dockerfile
+    dockerContext: ./backend
+    plan: free
+    envVars:
+      - key: ASPNETCORE_ENVIRONMENT
+        value: Production
+      - key: ConnectionStrings__DefaultConnection
+        sync: false
