@@ -10,6 +10,7 @@ public static class DependencyInjection
     {
         services.AddScoped<IMissionService, MissionService>();
         services.AddScoped<IPayloadService, PayloadService>();
+        services.AddScoped<ISnapshotService, SnapshotService>();
         return services;
     }
 }

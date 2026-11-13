@@ -1,5 +1,13 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { getMissions, getMissionById, getPayloads, mapMissionDto } from './api';
+import {
+  compareSnapshots,
+  createSnapshot,
+  deleteSnapshot,
+  getMissions,
+  getMissionById,
+  getPayloads,
+  mapMissionDto,
+} from './api';
 import type { MissionDto } from './api';
 import { initMissions, missions, missionsSource } from './missions';
 
@@ -107,5 +115,63 @@ describe('API client (mocked fetch)', () => {
     expect(missions).toHaveLength(before);
     expect(missionsSource).toBe('static');
     vi.unstubAllEnvs();
+  });
+});
+
+describe('snapshots client', () => {
+  it('createSnapshot POSTs label + source to /api/snapshots', async () => {
+    const fetchMock = vi.fn().mockResolvedValue({
+      ok: true,
+      status: 201,
+      json: async () => ({
+        id: '11111111-1111-1111-1111-111111111111',
+        label: 'Before update',
+        source: 'live',
+        createdAt: '2026-11-13T00:00:00Z',
+        missionCount: 15,
+      }),
+    } as Response);
+    vi.stubGlobal('fetch', fetchMock);
+    const created = await createSnapshot('Before update', 'live');
+    expect(created.label).toBe('Before update');
+    expect(created.missionCount).toBe(15);
+    expect(fetchMock).toHaveBeenCalledWith(
+      expect.stringContaining('/api/snapshots'),
+      expect.objectContaining({
+        method: 'POST',
+        body: JSON.stringify({ label: 'Before update', source: 'live' }),
+      }),
+    );
+  });
+
+  it('compareSnapshots maps added/removed DTOs and keeps field changes', async () => {
+    mockFetch({
+      fromId: '11111111-1111-1111-1111-111111111111',
+      fromLabel: 'Before update',
+      toId: null,
+      toLabel: 'Live data',
+      added: [{ ...dto, id: 'new-1', name: 'New Mission' }],
+      removed: [],
+      changed: [
+        {
+          missionId: 'test-1',
+          missionName: 'Test Mission 1',
+          changes: [{ field: 'status', oldValue: 'upcoming', newValue: 'completed' }],
+        },
+      ],
+    });
+    const diff = await compareSnapshots('11111111-1111-1111-1111-111111111111', 'live');
+    expect(diff.toLabel).toBe('Live data');
+    expect(diff.added).toHaveLength(1);
+    expect(diff.added[0].name).toBe('New Mission');
+    expect(diff.added[0].status).toBe('upcoming');
+    expect(diff.changed[0].changes).toEqual([
+      { field: 'status', oldValue: 'upcoming', newValue: 'completed' },
+    ]);
+  });
+
+  it('deleteSnapshot returns false on 404 instead of throwing', async () => {
+    mockFetch(null, false, 404);
+    await expect(deleteSnapshot('00000000-0000-0000-0000-000000000000')).resolves.toBe(false);
   });
 });

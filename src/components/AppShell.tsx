@@ -28,6 +28,7 @@ const NAV = [
   { to: '/library', label: 'Library' },
   { to: '/compare', label: 'Compare' },
   { to: '/payloads', label: 'Payloads' },
+  { to: '/research', label: 'Research' },
 ];
 
 export default function AppShell() {

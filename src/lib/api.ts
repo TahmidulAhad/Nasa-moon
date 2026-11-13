@@ -65,18 +65,145 @@ export interface MissionDto {
   sources: SourceDto[];
 }
 
-async function fetchJson<T>(path: string): Promise<T> {
+async function fetchJson<T>(path: string, timeoutMs: number = FETCH_TIMEOUT_MS): Promise<T> {
+  return requestJson<T>(path, undefined, timeoutMs);
+}
+
+async function requestJson<T>(
+  path: string,
+  init?: RequestInit,
+  timeoutMs: number = FETCH_TIMEOUT_MS,
+): Promise<T> {
   const controller = new AbortController();
-  const timeout = setTimeout(() => controller.abort(), FETCH_TIMEOUT_MS);
+  const timeout = setTimeout(() => controller.abort(), timeoutMs);
   try {
-    const res = await fetch(`${getApiBaseUrl()}${path}`, { signal: controller.signal });
+    const res = await fetch(`${getApiBaseUrl()}${path}`, { ...init, signal: controller.signal });
     if (!res.ok) {
       throw new Error(`API ${res.status} for ${path}`);
     }
+    if (res.status === 204) return undefined as T;
     return (await res.json()) as T;
   } finally {
     clearTimeout(timeout);
   }
+}
+
+/** Snapshots can take longer than a mission read (cold Render + DB write). */
+const SNAPSHOT_TIMEOUT_MS = 15000;
+
+// --- Snapshot shapes (backend SnapshotDto / SnapshotDiffDto, camelCase) ---
+
+export interface SnapshotSummary {
+  id: string;
+  label: string;
+  source: string;
+  createdAt: string;
+  missionCount: number;
+}
+
+export interface SnapshotDetail extends SnapshotSummary {
+  missions: Mission[];
+}
+
+export interface FieldChange {
+  field: string;
+  oldValue: string | null;
+  newValue: string | null;
+}
+
+export interface MissionChange {
+  missionId: string;
+  missionName: string;
+  changes: FieldChange[];
+}
+
+export interface SnapshotDiff {
+  fromId: string | null;
+  fromLabel: string;
+  toId: string | null;
+  toLabel: string;
+  added: Mission[];
+  removed: Mission[];
+  changed: MissionChange[];
+}
+
+interface SnapshotDetailDto extends SnapshotSummary {
+  missions: MissionDto[];
+}
+
+interface SnapshotDiffDto {
+  fromId: string | null;
+  fromLabel: string;
+  toId: string | null;
+  toLabel: string;
+  added: MissionDto[];
+  removed: MissionDto[];
+  changed: MissionChange[];
+}
+
+/** All saved snapshots, newest first. */
+export async function listSnapshots(): Promise<SnapshotSummary[]> {
+  return fetchJson<SnapshotSummary[]>('/api/snapshots', SNAPSHOT_TIMEOUT_MS);
+}
+
+/** Save the current dataset as a named snapshot ("live" or "static"). */
+export async function createSnapshot(label: string, source: 'live' | 'static'): Promise<SnapshotSummary> {
+  return requestJson<SnapshotSummary>(
+    '/api/snapshots',
+    {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ label, source }),
+    },
+    SNAPSHOT_TIMEOUT_MS,
+  );
+}
+
+/** One snapshot with its missions; undefined when it does not exist. */
+export async function getSnapshot(id: string): Promise<SnapshotDetail | undefined> {
+  try {
+    const dto = await fetchJson<SnapshotDetailDto>(
+      `/api/snapshots/${encodeURIComponent(id)}`,
+      SNAPSHOT_TIMEOUT_MS,
+    );
+    return { ...dto, missions: dto.missions.map(mapMissionDto) };
+  } catch (err) {
+    if (err instanceof Error && err.message.includes('API 404')) return undefined;
+    throw err;
+  }
+}
+
+/** Delete a snapshot. Returns false when it did not exist. */
+export async function deleteSnapshot(id: string): Promise<boolean> {
+  try {
+    await requestJson<unknown>(
+      `/api/snapshots/${encodeURIComponent(id)}`,
+      { method: 'DELETE' },
+      SNAPSHOT_TIMEOUT_MS,
+    );
+    return true;
+  } catch (err) {
+    if (err instanceof Error && err.message.includes('API 404')) return false;
+    throw err;
+  }
+}
+
+/**
+ * Compare two mission sets. toId is a snapshot id or 'live' for the current
+ * database. The diff's added/removed missions are mapped to the UI shape;
+ * changed entries only carry field changes, so they need no mapping.
+ */
+export async function compareSnapshots(fromId: string, toId: string): Promise<SnapshotDiff> {
+  const params = new URLSearchParams({ fromId, toId });
+  const dto = await fetchJson<SnapshotDiffDto>(
+    `/api/snapshots/compare?${params.toString()}`,
+    SNAPSHOT_TIMEOUT_MS,
+  );
+  return {
+    ...dto,
+    added: dto.added.map(mapMissionDto),
+    removed: dto.removed.map(mapMissionDto),
+  };
 }
 
 const VALID_STATUSES: MissionStatus[] = [

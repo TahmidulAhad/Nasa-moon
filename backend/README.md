@@ -9,18 +9,21 @@ Backend for the **CLPS Lunar Mission Browser** (`Nasa-moon` frontend), built wit
 backend/
 ├── NasaMoon.sln
 └── src/
-    ├── Domain/            # Entities only: Mission, Payload, Source
+    ├── Domain/            # Entities only: Mission, Payload, Source, DataSnapshot
     │   └── Entities/
     ├── Application/       # DTOs, repository + service interfaces, services, mappings, DI
-    │   ├── Dtos/          # MissionDto, PayloadDto, SourceDto, Create/UpdateMissionDto, MissionFilter
+    │   ├── Dtos/          # MissionDto, PayloadDto, SourceDto, Create/UpdateMissionDto, MissionFilter,
+    │   │                  # SnapshotDto, SnapshotDiffDto
     │   ├── Interfaces/    # IMissionRepository, IPayloadRepository, ISourceRepository,
-    │   │                  # IMissionService, IPayloadService
-    │   ├── Mappings/      # MissionMapper (entity <-> DTO)
-    │   └── Services/      # MissionService (search + filters), PayloadService
+    │   │                  # ISnapshotRepository, IMissionService, IPayloadService, ISnapshotService
+    │   ├── Mappings/      # MissionMapper (entity <-> DTO), SnapshotMapper (snapshot JSON)
+    │   └── Services/      # MissionService (search + filters), PayloadService,
+    │                      # SnapshotService (snapshot + diff)
     ├── Infrastructure/    # EF Core: NasaMoonDbContext (Npgsql), repositories, seed data
     │   ├── Repositories/
     │   └── SeedData/      # DbSeeder + missions.json (copied from the frontend's src/data)
-    └── Api/               # ASP.NET Core Web API: MissionsController, PayloadsController
+    └── Api/               # ASP.NET Core Web API: MissionsController, PayloadsController,
+                           # SnapshotsController
 ```
 
 ## Entities (match the frontend's `src/data/missions.json` schema)
@@ -32,6 +35,10 @@ backend/
   lastVerified + navigation to Payloads and Sources.
 - **Payload** — name, organization, purpose, type (belongs to a Mission).
 - **Source** — label, url, accessed (belongs to a Mission).
+- **DataSnapshot** — a saved copy of the mission dataset at a point in time:
+  label, source (`live` = current database, `static` = bundled missions.json),
+  createdAt, and the full missions JSON array (MissionDto shape) for research
+  comparisons.
 
 ## API endpoints
 
@@ -43,11 +50,28 @@ backend/
 | PUT | `/api/missions/{id}` | Update a mission |
 | DELETE | `/api/missions/{id}` | Delete a mission (payloads + sources cascade) |
 | GET | `/api/missions/{missionId}/payloads` | Payloads of one mission |
+| POST | `/api/snapshots` | Save a snapshot: `{ "label": "Before update", "source": "live" }` (`source` is `live` or `static`, defaults to `live`) → 201 |
+| GET | `/api/snapshots` | List snapshots, newest first (id, label, source, createdAt, missionCount) |
+| GET | `/api/snapshots/{id}` | One snapshot with its missions |
+| DELETE | `/api/snapshots/{id}` | Delete a snapshot → 204 |
+| GET | `/api/snapshots/compare?fromId={guid}&toId={guid\|live}` | Diff two datasets: added / removed / changed missions (each change lists Field, OldValue, NewValue — name, status, dates, landing site, region, provider, lander, payload count, objective) |
 
-Swagger UI: `https://localhost:5001/swagger` (Development).
+## Research snapshots
 
-CORS allows the Vite dev server (`http://localhost:5173`) and the deployed site
-(`https://clps-agent-kit.vercel.app`).
+Visitors can freeze the dataset and compare it later (frontend: **Research**
+page at `/research`, client in `src/lib/api.ts`):
+
+1. `POST /api/snapshots` with a label — saves the live database (or the
+   bundled static data when `source` is `static`).
+2. Later, `GET /api/snapshots/compare?fromId=…&toId=live` shows what changed
+   since that snapshot — new missions (Added), gone missions (Removed), and
+   field-by-field changes (Changed), e.g. a mission whose status moved from
+   `failed` to `completed`.
+
+Swagger UI: `http://localhost:5083/swagger` (Development).
+
+CORS allows the Vite dev server (`http://localhost:5173`) and the deployed sites
+(`https://clps-agent-kit.vercel.app`, `https://nasa-moon.vercel.app`).
 
 ## Run it
 

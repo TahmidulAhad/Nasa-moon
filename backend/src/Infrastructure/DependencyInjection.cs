@@ -16,6 +16,8 @@ public static class DependencyInjection
         services.AddScoped<IMissionRepository, MissionRepository>();
         services.AddScoped<IPayloadRepository, PayloadRepository>();
         services.AddScoped<ISourceRepository, SourceRepository>();
+        services.AddScoped<ISnapshotRepository, SnapshotRepository>();
+        services.AddScoped<IStaticMissionJsonProvider, StaticMissionJsonProvider>();
 
         return services;
     }

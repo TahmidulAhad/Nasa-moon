@@ -121,3 +121,50 @@ public class SourceRepository : ISourceRepository
     public async Task<List<Source>> GetByMissionIdAsync(string missionId, CancellationToken ct = default)
         => await _db.Sources.Where(s => s.MissionId == missionId).OrderBy(s => s.Label).ToListAsync(ct);
 }
+
+public class SnapshotRepository : ISnapshotRepository
+{
+    private readonly NasaMoonDbContext _db;
+
+    public SnapshotRepository(NasaMoonDbContext db)
+    {
+        _db = db;
+    }
+
+    public async Task<List<DataSnapshot>> GetAllAsync(CancellationToken ct = default)
+        => await _db.Snapshots.OrderByDescending(s => s.CreatedAt).ToListAsync(ct);
+
+    public async Task<DataSnapshot?> GetByIdAsync(Guid id, CancellationToken ct = default)
+        => await _db.Snapshots.FindAsync(new object[] { id }, ct);
+
+    public async Task<DataSnapshot> AddAsync(DataSnapshot snapshot, CancellationToken ct = default)
+    {
+        await _db.Snapshots.AddAsync(snapshot, ct);
+        await _db.SaveChangesAsync(ct);
+        return snapshot;
+    }
+
+    public async Task<bool> DeleteAsync(Guid id, CancellationToken ct = default)
+    {
+        var snapshot = await _db.Snapshots.FindAsync(new object[] { id }, ct);
+        if (snapshot is null) return false;
+        _db.Snapshots.Remove(snapshot);
+        return await _db.SaveChangesAsync(ct) > 0;
+    }
+}
+
+/// <summary>Reads the bundled static dataset (same file DbSeeder seeds from).</summary>
+public class StaticMissionJsonProvider : IStaticMissionJsonProvider
+{
+    public async Task<string?> GetMissionsJsonAsync(CancellationToken ct = default)
+    {
+        var jsonPath = Path.Combine(AppContext.BaseDirectory, "SeedData", "missions.json");
+        if (!File.Exists(jsonPath))
+        {
+            // Fallback for `dotnet run` from the Api project folder.
+            jsonPath = Path.Combine(Directory.GetCurrentDirectory(), "..", "Infrastructure", "SeedData", "missions.json");
+        }
+        if (!File.Exists(jsonPath)) return null;
+        return await File.ReadAllTextAsync(jsonPath, ct);
+    }
+}

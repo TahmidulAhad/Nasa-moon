@@ -24,3 +24,18 @@ public interface ISourceRepository
 {
     Task<List<Source>> GetByMissionIdAsync(string missionId, CancellationToken ct = default);
 }
+
+public interface ISnapshotRepository
+{
+    Task<List<DataSnapshot>> GetAllAsync(CancellationToken ct = default);
+    Task<DataSnapshot?> GetByIdAsync(Guid id, CancellationToken ct = default);
+    Task<DataSnapshot> AddAsync(DataSnapshot snapshot, CancellationToken ct = default);
+    Task<bool> DeleteAsync(Guid id, CancellationToken ct = default);
+}
+
+/// <summary>Reads the bundled static dataset (frontend src/data/missions.json copy).</summary>
+public interface IStaticMissionJsonProvider
+{
+    /// <summary>Raw missions JSON, or null when the file cannot be found.</summary>
+    Task<string?> GetMissionsJsonAsync(CancellationToken ct = default);
+}
