@@ -22,6 +22,84 @@ namespace NasaMoon.Infrastructure.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
+            modelBuilder.Entity("NasaMoon.Domain.Entities.AuditLog", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Action")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Entity")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
+
+                    b.Property<string>("EntityId")
+                        .HasColumnType("text");
+
+                    b.Property<Guid?>("UserId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CreatedAt");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("audit_logs", (string)null);
+                });
+
+            modelBuilder.Entity("NasaMoon.Domain.Entities.Collection", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("collections", (string)null);
+                });
+
+            modelBuilder.Entity("NasaMoon.Domain.Entities.CollectionItem", b =>
+                {
+                    b.Property<Guid>("CollectionId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("MissionId")
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("CollectionId", "MissionId");
+
+                    b.ToTable("collection_items", (string)null);
+                });
+
             modelBuilder.Entity("NasaMoon.Domain.Entities.DataSnapshot", b =>
                 {
                     b.Property<Guid>("Id")
@@ -45,9 +123,14 @@ namespace NasaMoon.Infrastructure.Migrations
                         .HasMaxLength(20)
                         .HasColumnType("character varying(20)");
 
+                    b.Property<Guid?>("UserId")
+                        .HasColumnType("uuid");
+
                     b.HasKey("Id");
 
                     b.HasIndex("CreatedAt");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("data_snapshots", (string)null);
                 });
@@ -169,6 +252,83 @@ namespace NasaMoon.Infrastructure.Migrations
                     b.ToTable("payloads", (string)null);
                 });
 
+            modelBuilder.Entity("NasaMoon.Domain.Entities.RefreshToken", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime>("ExpiresAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime?>("RevokedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("TokenHash")
+                        .IsRequired()
+                        .HasMaxLength(128)
+                        .HasColumnType("character varying(128)");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("TokenHash")
+                        .IsUnique();
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("refresh_tokens", (string)null);
+                });
+
+            modelBuilder.Entity("NasaMoon.Domain.Entities.SavedItem", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("MissionId")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
+
+                    b.Property<string>("Note")
+                        .HasColumnType("text");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.HasIndex("UserId", "MissionId")
+                        .IsUnique();
+
+                    b.ToTable("saved_items", (string)null);
+                });
+
+            modelBuilder.Entity("NasaMoon.Domain.Entities.SavedItemTag", b =>
+                {
+                    b.Property<Guid>("SavedItemId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Tag")
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
+
+                    b.HasKey("SavedItemId", "Tag");
+
+                    b.ToTable("saved_item_tags", (string)null);
+                });
+
             modelBuilder.Entity("NasaMoon.Domain.Entities.Source", b =>
                 {
                     b.Property<int>("Id")
@@ -201,6 +361,83 @@ namespace NasaMoon.Infrastructure.Migrations
                     b.ToTable("sources", (string)null);
                 });
 
+            modelBuilder.Entity("NasaMoon.Domain.Entities.User", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("DisplayName")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasMaxLength(256)
+                        .HasColumnType("character varying(256)");
+
+                    b.Property<string>("PasswordHash")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Role")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Email")
+                        .IsUnique();
+
+                    b.ToTable("users", (string)null);
+                });
+
+            modelBuilder.Entity("NasaMoon.Domain.Entities.AuditLog", b =>
+                {
+                    b.HasOne("NasaMoon.Domain.Entities.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("NasaMoon.Domain.Entities.Collection", b =>
+                {
+                    b.HasOne("NasaMoon.Domain.Entities.User", "User")
+                        .WithMany("Collections")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("NasaMoon.Domain.Entities.CollectionItem", b =>
+                {
+                    b.HasOne("NasaMoon.Domain.Entities.Collection", "Collection")
+                        .WithMany("Items")
+                        .HasForeignKey("CollectionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Collection");
+                });
+
+            modelBuilder.Entity("NasaMoon.Domain.Entities.DataSnapshot", b =>
+                {
+                    b.HasOne("NasaMoon.Domain.Entities.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("NasaMoon.Domain.Entities.Payload", b =>
                 {
                     b.HasOne("NasaMoon.Domain.Entities.Mission", "Mission")
@@ -210,6 +447,39 @@ namespace NasaMoon.Infrastructure.Migrations
                         .IsRequired();
 
                     b.Navigation("Mission");
+                });
+
+            modelBuilder.Entity("NasaMoon.Domain.Entities.RefreshToken", b =>
+                {
+                    b.HasOne("NasaMoon.Domain.Entities.User", "User")
+                        .WithMany("RefreshTokens")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("NasaMoon.Domain.Entities.SavedItem", b =>
+                {
+                    b.HasOne("NasaMoon.Domain.Entities.User", "User")
+                        .WithMany("SavedItems")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("NasaMoon.Domain.Entities.SavedItemTag", b =>
+                {
+                    b.HasOne("NasaMoon.Domain.Entities.SavedItem", "SavedItem")
+                        .WithMany("Tags")
+                        .HasForeignKey("SavedItemId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("SavedItem");
                 });
 
             modelBuilder.Entity("NasaMoon.Domain.Entities.Source", b =>
@@ -223,11 +493,30 @@ namespace NasaMoon.Infrastructure.Migrations
                     b.Navigation("Mission");
                 });
 
+            modelBuilder.Entity("NasaMoon.Domain.Entities.Collection", b =>
+                {
+                    b.Navigation("Items");
+                });
+
             modelBuilder.Entity("NasaMoon.Domain.Entities.Mission", b =>
                 {
                     b.Navigation("Payloads");
 
                     b.Navigation("Sources");
+                });
+
+            modelBuilder.Entity("NasaMoon.Domain.Entities.SavedItem", b =>
+                {
+                    b.Navigation("Tags");
+                });
+
+            modelBuilder.Entity("NasaMoon.Domain.Entities.User", b =>
+                {
+                    b.Navigation("Collections");
+
+                    b.Navigation("RefreshTokens");
+
+                    b.Navigation("SavedItems");
                 });
 #pragma warning restore 612, 618
         }

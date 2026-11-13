@@ -12,6 +12,14 @@ public class DataSnapshot
 {
     public Guid Id { get; set; } = Guid.NewGuid();
 
+    /// <summary>
+    /// Owner of the snapshot. Null = legacy snapshot created before accounts
+    /// existed: those stay public, readable by everyone (including visitors).
+    /// A snapshot with an owner is visible only to that owner (and admins).
+    /// </summary>
+    public Guid? UserId { get; set; }
+    public User? User { get; set; }
+
     /// <summary>Human label, e.g. "Before the March update".</summary>
     public string Label { get; set; } = string.Empty;
 

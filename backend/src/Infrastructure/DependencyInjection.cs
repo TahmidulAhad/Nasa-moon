@@ -3,6 +3,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using NasaMoon.Application.Interfaces;
 using NasaMoon.Infrastructure.Repositories;
+using NasaMoon.Infrastructure.Services;
 
 namespace NasaMoon.Infrastructure;
 
@@ -18,6 +19,13 @@ public static class DependencyInjection
         services.AddScoped<ISourceRepository, SourceRepository>();
         services.AddScoped<ISnapshotRepository, SnapshotRepository>();
         services.AddScoped<IStaticMissionJsonProvider, StaticMissionJsonProvider>();
+        services.AddScoped<IUserRepository, UserRepository>();
+        services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
+        services.AddScoped<ISavedItemRepository, SavedItemRepository>();
+        services.AddScoped<ICollectionRepository, CollectionRepository>();
+        services.AddScoped<IAuditLogRepository, AuditLogRepository>();
+        services.AddScoped<IPasswordHasher, BCryptPasswordHasher>();
+        services.AddScoped<IJwtTokenService, JwtTokenService>();
 
         return services;
     }

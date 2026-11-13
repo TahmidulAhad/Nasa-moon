@@ -5,26 +5,7 @@ Backend for the **CLPS Lunar Mission Browser** (`Nasa-moon` frontend), built wit
 
 ## Structure
 
-```
-backend/
-├── NasaMoon.sln
-└── src/
-    ├── Domain/            # Entities only: Mission, Payload, Source, DataSnapshot
-    │   └── Entities/
-    ├── Application/       # DTOs, repository + service interfaces, services, mappings, DI
-    │   ├── Dtos/          # MissionDto, PayloadDto, SourceDto, Create/UpdateMissionDto, MissionFilter,
-    │   │                  # SnapshotDto, SnapshotDiffDto
-    │   ├── Interfaces/    # IMissionRepository, IPayloadRepository, ISourceRepository,
-    │   │                  # ISnapshotRepository, IMissionService, IPayloadService, ISnapshotService
-    │   ├── Mappings/      # MissionMapper (entity <-> DTO), SnapshotMapper (snapshot JSON)
-    │   └── Services/      # MissionService (search + filters), PayloadService,
-    │                      # SnapshotService (snapshot + diff)
-    ├── Infrastructure/    # EF Core: NasaMoonDbContext (Npgsql), repositories, seed data
-    │   ├── Repositories/
-    │   └── SeedData/      # DbSeeder + missions.json (copied from the frontend's src/data)
-    └── Api/               # ASP.NET Core Web API: MissionsController, PayloadsController,
-                           # SnapshotsController
-```
+```\nbackend/\n├── NasaMoon.sln\n└── src/\n    ├── Domain/            # Entities only: Mission, Payload, Source, DataSnapshot,\n    │   └── Entities/      # User, RefreshToken, SavedItem, Collection, CollectionItem,\n    │                      # SavedItemTag, AuditLog\n    ├── Application/       # DTOs, repository + service interfaces, services, mappings, DI\n    │   ├── Dtos/          # MissionDto, PayloadDto, SourceDto, Create/UpdateMissionDto, MissionFilter,\n    │   │                  # SnapshotDto, SnapshotDiffDto, AuthDto, LibraryDto, CollectionDto\n    │   ├── Interfaces/    # IMissionRepository, IPayloadRepository, ISourceRepository,\n    │   │                  # ISnapshotRepository, IMissionService, IPayloadService, ISnapshotService,\n    │   │                  # IUserRepository, IRefreshTokenRepository, ILibraryRepository,\n    │   │                  # IAuditLogRepository, IAuthService, ILibraryService,\n    │   │                  # IExportService, IAuditLogService, IPasswordHasher, IJwtTokenService\n    │   ├── Mappings/      # MissionMapper (entity <-> DTO), SnapshotMapper (snapshot JSON),\n    │   │                  # LibraryMapper, UserMapper\n    │   └── Services/      # MissionService (search + filters), PayloadService,\n    │                      # SnapshotService (snapshot + diff), AuthService,\n    │                      # LibraryService, ExportService, AuditLogService\n    ├── Infrastructure/    # EF Core: NasaMoonDbContext (Npgsql), repositories, seed data\n    │   ├── Repositories/  # + User/RefreshToken/Library/AuditLog repositories,\n    │   │                  # BCrypt password hasher, JWT token service\n    │   └── SeedData/      # DbSeeder + missions.json (copied from the frontend's src/data)\n    └── Api/               # ASP.NET Core Web API: MissionsController, PayloadsController,\n                           # SnapshotsController, AuthController, LibraryController,\n                           # CollectionsController, AdminController\n```
 
 ## Entities (match the frontend's `src/data/missions.json` schema)
 
@@ -38,28 +19,114 @@ backend/
 - **DataSnapshot** — a saved copy of the mission dataset at a point in time:
   label, source (`live` = current database, `static` = bundled missions.json),
   createdAt, and the full missions JSON array (MissionDto shape) for research
-  comparisons.
+  comparisons. Since Researcher Accounts (Phase 1) it also has an optional
+  `UserId` owner — snapshots without an owner are **legacy (public)** and stay
+  readable by everyone.
+- **User** — a researcher account: email (unique), displayName, BCrypt password
+  hash, role (`Researcher` | `Admin`), createdAt.
+- **RefreshToken** — a rotating 7-day refresh token (only its SHA-256 hash is
+  stored; each use replaces it with a new one).
+- **SavedItem** — one mission saved to a researcher's library (UserId,
+  MissionId, personal note, createdAt) + **SavedItemTag** (one tag per row).
+- **Collection** — a researcher's folder of missions (UserId, name,
+  description) + **CollectionItem** (CollectionId, MissionId).
+- **AuditLog** — who changed mission data: UserId, action (`mission.create`,
+  `mission.update`, `mission.delete`, `snapshot.create`, `snapshot.delete`),
+  entity type/id, createdAt.
 
 ## API endpoints
 
 | Method | Route | Description |
 |--------|-------|-------------|
-| GET | `/api/missions?search=&status=&provider=&launchYear=&region=` | List missions, free-text search + filters (same filters as the frontend FilterBar) |
-| GET | `/api/missions/{id}` | One mission with payloads + sources |
-| POST | `/api/missions` | Create a mission |
-| PUT | `/api/missions/{id}` | Update a mission |
-| DELETE | `/api/missions/{id}` | Delete a mission (payloads + sources cascade) |
-| GET | `/api/missions/{missionId}/payloads` | Payloads of one mission |
-| POST | `/api/snapshots` | Save a snapshot: `{ "label": "Before update", "source": "live" }` (`source` is `live` or `static`, defaults to `live`) → 201 |
-| GET | `/api/snapshots` | List snapshots, newest first (id, label, source, createdAt, missionCount) |
-| GET | `/api/snapshots/{id}` | One snapshot with its missions |
-| DELETE | `/api/snapshots/{id}` | Delete a snapshot → 204 |
-| GET | `/api/snapshots/compare?fromId={guid}&toId={guid\|live}` | Diff two datasets: added / removed / changed missions (each change lists Field, OldValue, NewValue — name, status, dates, landing site, region, provider, lander, payload count, objective) |
+| GET | `/api/missions?search=&status=&provider=&launchYear=&region=` | List missions, free-text search + filters (same filters as the frontend FilterBar) — **public** |
+| GET | `/api/missions/{id}` | One mission with payloads + sources — **public** |
+| POST | `/api/missions` | Create a mission — **Admin only** |
+| PUT | `/api/missions/{id}` | Update a mission — **Admin only** |
+| DELETE | `/api/missions/{id}` | Delete a mission (payloads + sources cascade) — **Admin only** |
+| GET | `/api/missions/{missionId}/payloads` | Payloads of one mission — **public** |
+| POST | `/api/auth/register` | Register a researcher `{ email, password, displayName }` → access + refresh token + user (first user becomes Admin, see below) |
+| POST | `/api/auth/login` | Log in `{ email, password }` → access + refresh token + user |
+| POST | `/api/auth/refresh` | Rotate the refresh token `{ refreshToken }` → new tokens |
+| POST | `/api/auth/logout` | Revoke one refresh token `{ refreshToken }` → 204 |
+| GET | `/api/auth/me` | The logged-in researcher — **login required** |
+| POST | `/api/auth/change-password` | Change password `{ currentPassword, newPassword }` — revokes all refresh tokens (logout everywhere) |
+| GET | `/api/library?search=` | My saved missions (search matches name, note or tag) — **login required** |
+| POST | `/api/library` | Save a mission `{ missionId, note?, tags? }` (idempotent) — **login required** |
+| PUT | `/api/library/{id}` | Change my note / tags on a saved item — **login required** |
+| DELETE | `/api/library/{id}` | Remove a mission from my library — **login required** |
+| GET | `/api/library/export?format=json\|csv` | Download my whole library as a file — **login required** |
+| GET | `/api/collections` | My collections — **login required** |
+| POST | `/api/collections` | Create a collection `{ name, description? }` — **login required** |
+| GET | `/api/collections/{id}` | One collection with its missions — **login required** |
+| PUT | `/api/collections/{id}` | Rename / change description — **login required** |
+| DELETE | `/api/collections/{id}` | Delete a collection — **login required** |
+| POST | `/api/collections/{id}/items` | Add a mission `{ missionId }` — **login required** |
+| DELETE | `/api/collections/{id}/items/{missionId}` | Remove a mission — **login required** |
+| GET | `/api/collections/{id}/export?format=json\|csv` | Download one collection — **login required** |
+| GET | `/api/admin/users` | All researcher accounts — **Admin only** |
+| GET | `/api/admin/audit-logs?count=` | Newest audit entries — **Admin only** |
+| POST | `/api/snapshots` | Save a snapshot: `{ "label": "Before update", "source": "live" }` (`source` is `live` or `static`, defaults to `live`) → 201 — **login required** (owned by the caller) |
+| GET | `/api/snapshots` | List visible snapshots, newest first (id, label, source, createdAt, missionCount, userId, isLegacy) — mine + legacy public ones; admins see all |
+| GET | `/api/snapshots/{id}` | One snapshot with its missions (404 for other researchers' snapshots) |
+| DELETE | `/api/snapshots/{id}` | Delete a snapshot (owner or Admin; legacy: Admin only) → 204 |
+| GET | `/api/snapshots/{id}/export?format=json\|csv` | Download a snapshot's missions (must be visible to the caller) |
+| GET | `/api/snapshots/compare?fromId={guid}&toId={guid\|live}` | Diff two datasets: added / removed / changed missions (each change lists Field, OldValue, NewValue — name, status, dates, landing site, region, provider, lander, payload count, objective). Both snapshots must be visible to the caller |
+
+## Researcher accounts (Phase 1)
+
+Each researcher gets their own account and keeps their research in it, so the
+same data never has to be searched twice. The frontend pages are `/login`,
+`/register`, `/my-library` (saved missions + notes/tags + export), `/collections`,
+`/profile`, `/admin` (mission management, accounts, audit log); the public
+`/library` page (Research Library of conclusions) is unchanged, and mission
+browsing stays public for logged-out visitors.
+
+**Decisions for Phase 1** (approved by the user, 2026-11-13):
+
+1. Registration is **open** — anyone can register.
+2. **No email verification** in Phase 1 (no email service yet) — accounts are
+   active immediately.
+3. Legacy (ownerless) snapshots stay **public**, readable by everyone.
+4. Export is **JSON/CSV only** (no PDF).
+5. Collections are **private only** (no sharing).
+6. **The FIRST registered user automatically becomes Admin** (bootstrap rule).
+   There is no seeded admin and no seeded password — whoever registers first
+   gets the Admin role; every later registration is a Researcher.
+
+**Auth setup — `Jwt__Secret` is required in Production.** The API reads the
+JWT signing secret from configuration key `Jwt:Secret` (env var `Jwt__Secret`).
+In Development a missing/placeholder secret falls back to a random ephemeral
+one (tokens stop working on restart); **in Production the API fails fast at
+startup without a real secret (≥ 32 characters)** — set it before deploying:
+
+```bash
+# Local dev (user secrets)
+cd src/Api
+dotnet user-secrets set "Jwt:Secret" "<a-long-random-string-at-least-32-chars>"
+
+# Render (production) — set in the dashboard, never commit it:
+#   Jwt__Secret = <a-long-random-string-at-least-32-chars>
+# Generate one with:  openssl rand -base64 48
+```
+
+Other auth details: access tokens are JWTs (1h), refresh tokens are opaque
+random values rotated on every use (7d, only the SHA-256 hash is stored);
+passwords are hashed with BCrypt (work factor 11); login/register are rate
+limited to 10 attempts/minute per IP; every mission write and every snapshot
+create/delete is written to the audit log (`GET /api/admin/audit-logs`).
+
+Frontend auth client: `src/lib/auth.ts` (login/register/refresh/me, token
+storage in localStorage, `authFetch` with Bearer header + one 401→refresh→retry),
+`src/lib/authContext.tsx` (AuthProvider), `src/lib/library.ts` (library /
+collections / admin calls), pages in `src/pages/` (LoginPage, RegisterPage,
+MyLibraryPage, CollectionsPage, ProfilePage, AdminPage).
 
 ## Research snapshots
 
-Visitors can freeze the dataset and compare it later (frontend: **Research**
-page at `/research`, client in `src/lib/api.ts`):
+Logged-in researchers can freeze the dataset and compare it later
+(frontend: **Research** page at `/research`, client in `src/lib/api.ts`).
+Snapshots belong to the researcher who saves them; snapshots saved before
+accounts existed are legacy (public) and stay readable by everyone:
 
 1. `POST /api/snapshots` with a label — saves the live database (or the
    bundled static data when `source` is `static`).

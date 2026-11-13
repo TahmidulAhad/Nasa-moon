@@ -2,6 +2,7 @@ import { lazy, Suspense } from 'react';
 import { Route, Routes } from 'react-router-dom';
 import AppShell from './components/AppShell';
 import { CompareProvider } from './components/CompareContext';
+import { AuthProvider } from './lib/authContext';
 import Loading from './components/Loading';
 import ComparePage from './pages/ComparePage';
 import HomePage from './pages/HomePage';
@@ -30,9 +31,18 @@ const WhySouthPolePage = lazy(() => import('./pages/WhySouthPolePage'));
 const MoonInteriorPage = lazy(() => import('./pages/MoonInteriorPage'));
 const AtlasPage = lazy(() => import('./pages/AtlasPage'));
 const CompositionPage = lazy(() => import('./pages/CompositionPage'));
+// Lazy: researcher accounts (Phase 1) — auth + library pages stay out of
+// the first bundle; they need the live API anyway.
+const LoginPage = lazy(() => import('./pages/LoginPage'));
+const RegisterPage = lazy(() => import('./pages/RegisterPage'));
+const MyLibraryPage = lazy(() => import('./pages/MyLibraryPage'));
+const CollectionsPage = lazy(() => import('./pages/CollectionsPage'));
+const ProfilePage = lazy(() => import('./pages/ProfilePage'));
+const AdminPage = lazy(() => import('./pages/AdminPage'));
 
 export default function App() {
   return (
+    <AuthProvider>
     <CompareProvider>
       <Suspense fallback={<Loading />}>
         <Routes>
@@ -53,10 +63,20 @@ export default function App() {
             <Route path="/compare" element={<ComparePage />} />
             <Route path="/payloads" element={<PayloadsPage />} />
             <Route path="/research" element={<ResearchPage />} />
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="/register" element={<RegisterPage />} />
+            {/* /library is the public Research Library; the researcher's own
+            saved missions live at /my-library. */}
+            <Route path="/my-library" element={<MyLibraryPage />} />
+            <Route path="/collections" element={<CollectionsPage />} />
+            <Route path="/collections/:id" element={<CollectionsPage />} />
+            <Route path="/profile" element={<ProfilePage />} />
+            <Route path="/admin" element={<AdminPage />} />
             <Route path="*" element={<NotFoundPage />} />
           </Route>
         </Routes>
       </Suspense>
     </CompareProvider>
+    </AuthProvider>
   );
 }

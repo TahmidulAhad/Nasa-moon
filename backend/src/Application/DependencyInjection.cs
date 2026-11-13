@@ -11,6 +11,10 @@ public static class DependencyInjection
         services.AddScoped<IMissionService, MissionService>();
         services.AddScoped<IPayloadService, PayloadService>();
         services.AddScoped<ISnapshotService, SnapshotService>();
+        services.AddScoped<IAuthService, AuthService>();
+        services.AddScoped<ILibraryService, LibraryService>();
+        services.AddScoped<IExportService, ExportService>();
+        services.AddScoped<IAuditLogService, AuditLogService>();
         return services;
     }
 }

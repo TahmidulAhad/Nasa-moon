@@ -8,6 +8,13 @@ public class SnapshotDto
     public string Source { get; set; } = string.Empty;
     public DateTime CreatedAt { get; set; }
     public int MissionCount { get; set; }
+
+    /// <summary>Owner of the snapshot, or null for legacy (ownerless, public) snapshots.</summary>
+    public Guid? UserId { get; set; }
+
+    /// <summary>True when the snapshot has no owner (created before accounts
+    /// existed): legacy snapshots stay public, readable by everyone.</summary>
+    public bool IsLegacy { get; set; }
 }
 
 /// <summary>One snapshot with its missions (detail view).</summary>

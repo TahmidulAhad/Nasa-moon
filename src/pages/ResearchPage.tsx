@@ -10,6 +10,7 @@ import {
 } from '../lib/api';
 import type { SnapshotDiff, SnapshotSummary } from '../lib/api';
 import type { Mission } from '../lib/types';
+import { useAuth } from '../lib/authContext';
 import EmptyState from '../components/EmptyState';
 import Loading from '../components/Loading';
 import StatusBadge from '../components/StatusBadge';
@@ -41,6 +42,7 @@ function formatDate(iso: string): string {
 }
 
 export default function ResearchPage() {
+  const { user } = useAuth();
   const [snapshots, setSnapshots] = useState<SnapshotSummary[]>([]);
   const [loading, setLoading] = useState(true);
   const [loadError, setLoadError] = useState(false);
@@ -88,6 +90,11 @@ export default function ResearchPage() {
   );
 
   async function handleSave() {
+    // Snapshots belong to the researcher who saves them — login first.
+    if (!user) {
+      setSaveError('Log in to save a snapshot — it will be stored in your account.');
+      return;
+    }
     const trimmed = label.trim();
     if (!trimmed) {
       setSaveError('Give the snapshot a label first.');
@@ -206,10 +213,22 @@ export default function ResearchPage() {
         or a saved moment against the live data — to see exactly what changed.
       </p>
 
-      {/* Save a snapshot */}
+      {/* Save a snapshot — login required: snapshots belong to the
+      researcher who saves them. Logged-out visitors can still browse and
+      compare the legacy (public) snapshots below. */}
       <div className="mb-6 rounded-xl border border-space-800 bg-space-900 p-4">
         <h2 className="mb-3 text-base font-semibold text-slate-100">Save a snapshot</h2>
-        <div className="flex flex-col gap-3 sm:flex-row">
+        {!user ? (
+          <p className="text-sm text-slate-300">
+            <Link to="/login" state={{ from: '/research' }} className="text-accent underline">
+              Log in
+            </Link>{' '}
+            to save a snapshot — it is stored in your account and only you can
+            see it. Public (legacy) snapshots saved before accounts existed
+            stay visible to everyone.
+          </p>
+        ) : (
+          <div className="flex flex-col gap-3 sm:flex-row">
           <label className="flex-1">
             <span className="sr-only">Snapshot label</span>
             <input
@@ -239,7 +258,8 @@ export default function ResearchPage() {
           >
             {saving ? 'Saving…' : 'Save snapshot'}
           </button>
-        </div>
+          </div>
+        )}
         {saveError && <p className="mt-2 text-sm text-red-400">{saveError}</p>}
       </div>
 
@@ -269,6 +289,21 @@ export default function ResearchPage() {
                 <span className="text-sm text-slate-400">
                   {s.missionCount} mission{s.missionCount === 1 ? '' : 's'}
                 </span>
+                <span
+                  className={`rounded-full px-2 py-0.5 text-xs font-semibold ${
+                    s.isLegacy
+                      ? 'bg-slate-500/20 text-slate-300'
+                      : s.userId === user?.id
+                        ? 'bg-emerald-500/20 text-emerald-300'
+                        : 'bg-slate-500/20 text-slate-300'
+                  }`}
+                >
+                  {s.isLegacy
+                    ? 'Public (legacy)'
+                    : s.userId === user?.id
+                      ? 'Yours'
+                      : 'Another researcher'}
+                </span>
                 <span className="ml-auto flex gap-2">
                   <button
                     type="button"
@@ -277,14 +312,16 @@ export default function ResearchPage() {
                   >
                     {viewingId === s.id ? 'Hide' : 'View'}
                   </button>
-                  <button
-                    type="button"
-                    onClick={() => void handleDelete(s.id)}
-                    disabled={deletingId === s.id}
-                    className="inline-flex min-h-[44px] items-center rounded-md border border-red-900 px-3 text-sm text-red-400 disabled:opacity-50"
-                  >
-                    Delete
-                  </button>
+                  {(s.userId === user?.id || user?.role === 'Admin') && (
+                    <button
+                      type="button"
+                      onClick={() => void handleDelete(s.id)}
+                      disabled={deletingId === s.id}
+                      className="inline-flex min-h-[44px] items-center rounded-md border border-red-900 px-3 text-sm text-red-400 disabled:opacity-50"
+                    >
+                      Delete
+                    </button>
+                  )}
                 </span>
               </div>
               {viewingId === s.id && (

@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using NasaMoon.Application.Dtos;
 using NasaMoon.Application.Interfaces;
@@ -9,10 +10,12 @@ namespace NasaMoon.Api.Controllers;
 public class MissionsController : ControllerBase
 {
     private readonly IMissionService _missions;
+    private readonly IAuditLogService _audit;
 
-    public MissionsController(IMissionService missions)
+    public MissionsController(IMissionService missions, IAuditLogService audit)
     {
         _missions = missions;
+        _audit = audit;
     }
 
     /// <summary>List missions with free-text search and filters (status / provider / launch year / region).</summary>
@@ -43,12 +46,15 @@ public class MissionsController : ControllerBase
         return mission is null ? NotFound() : Ok(mission);
     }
 
+    /// <summary>Create a mission — Admin only. Writes are audit-logged.</summary>
     [HttpPost]
+    [Authorize(Roles = "Admin")]
     public async Task<ActionResult<MissionDto>> Create([FromBody] CreateMissionDto dto, CancellationToken ct)
     {
         try
         {
             var created = await _missions.CreateMissionAsync(dto, ct);
+            await _audit.LogAsync(User.GetUserId(), "mission.create", "mission", created.Id, ct);
             return CreatedAtAction(nameof(GetById), new { id = created.Id }, created);
         }
         catch (ArgumentException ex)
@@ -61,17 +67,25 @@ public class MissionsController : ControllerBase
         }
     }
 
+    /// <summary>Update a mission — Admin only. Writes are audit-logged.</summary>
     [HttpPut("{id}")]
+    [Authorize(Roles = "Admin")]
     public async Task<ActionResult<MissionDto>> Update(string id, [FromBody] UpdateMissionDto dto, CancellationToken ct)
     {
         var updated = await _missions.UpdateMissionAsync(id, dto, ct);
-        return updated is null ? NotFound() : Ok(updated);
+        if (updated is null) return NotFound();
+        await _audit.LogAsync(User.GetUserId(), "mission.update", "mission", id, ct);
+        return Ok(updated);
     }
 
+    /// <summary>Delete a mission — Admin only. Writes are audit-logged.</summary>
     [HttpDelete("{id}")]
+    [Authorize(Roles = "Admin")]
     public async Task<IActionResult> Delete(string id, CancellationToken ct)
     {
         var deleted = await _missions.DeleteMissionAsync(id, ct);
+        if (deleted)
+            await _audit.LogAsync(User.GetUserId(), "mission.delete", "mission", id, ct);
         return deleted ? NoContent() : NotFound();
     }
 }

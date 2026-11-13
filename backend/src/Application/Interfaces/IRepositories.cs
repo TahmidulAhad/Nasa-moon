@@ -28,6 +28,12 @@ public interface ISourceRepository
 public interface ISnapshotRepository
 {
     Task<List<DataSnapshot>> GetAllAsync(CancellationToken ct = default);
+
+    /// <summary>
+    /// Snapshots visible to the caller: admin sees all; a researcher sees
+    /// their own plus legacy (ownerless) ones; anonymous sees legacy only.
+    /// </summary>
+    Task<List<DataSnapshot>> GetVisibleAsync(Guid? userId, bool isAdmin, CancellationToken ct = default);
     Task<DataSnapshot?> GetByIdAsync(Guid id, CancellationToken ct = default);
     Task<DataSnapshot> AddAsync(DataSnapshot snapshot, CancellationToken ct = default);
     Task<bool> DeleteAsync(Guid id, CancellationToken ct = default);

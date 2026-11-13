@@ -48,12 +48,14 @@ function mockFetch(body: unknown, ok = true, status = 200) {
       ok,
       status,
       json: async () => body,
+      text: async () => (typeof body === 'string' ? body : JSON.stringify(body)),
     } as Response),
   );
 }
 
 afterEach(() => {
   vi.unstubAllGlobals();
+  vi.unstubAllEnvs();
 });
 
 describe('mapMissionDto', () => {
@@ -120,16 +122,20 @@ describe('API client (mocked fetch)', () => {
 
 describe('snapshots client', () => {
   it('createSnapshot POSTs label + source to /api/snapshots', async () => {
+    // createSnapshot goes through authFetch, which needs the API configured.
+    vi.stubEnv('VITE_API_URL', 'http://localhost:5083');
+    const snapshotBody = {
+      id: '11111111-1111-1111-1111-111111111111',
+      label: 'Before update',
+      source: 'live',
+      createdAt: '2026-11-13T00:00:00Z',
+      missionCount: 15,
+    };
     const fetchMock = vi.fn().mockResolvedValue({
       ok: true,
       status: 201,
-      json: async () => ({
-        id: '11111111-1111-1111-1111-111111111111',
-        label: 'Before update',
-        source: 'live',
-        createdAt: '2026-11-13T00:00:00Z',
-        missionCount: 15,
-      }),
+      json: async () => snapshotBody,
+      text: async () => JSON.stringify(snapshotBody),
     } as Response);
     vi.stubGlobal('fetch', fetchMock);
     const created = await createSnapshot('Before update', 'live');
@@ -171,6 +177,8 @@ describe('snapshots client', () => {
   });
 
   it('deleteSnapshot returns false on 404 instead of throwing', async () => {
+    // deleteSnapshot goes through authFetch, which needs the API configured.
+    vi.stubEnv('VITE_API_URL', 'http://localhost:5083');
     mockFetch(null, false, 404);
     await expect(deleteSnapshot('00000000-0000-0000-0000-000000000000')).resolves.toBe(false);
   });

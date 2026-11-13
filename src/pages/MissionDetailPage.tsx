@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { useCompare } from '../components/CompareContext';
 import EmptyState from '../components/EmptyState';
@@ -6,12 +7,68 @@ import SunEarthPanel from '../components/navigator/SunEarthPanel';
 import PayloadList from '../components/PayloadList';
 import SourceList from '../components/SourceList';
 import StatusBadge from '../components/StatusBadge';
+import { useAuth } from '../lib/authContext';
+import { ApiError } from '../lib/auth';
+import { listSaved, saveMission, unsaveMission } from '../lib/library';
 import { getMissionById } from '../lib/missions';
 
 export default function MissionDetailPage() {
   const { id } = useParams();
   const mission = id ? getMissionById(id) : undefined;
   const { ids, toggle } = useCompare();
+  const { user } = useAuth();
+  const [savedId, setSavedId] = useState<string | null>(null);
+  const [saveBusy, setSaveBusy] = useState(false);
+  const [saveNote, setSaveNote] = useState('');
+
+  // Check once whether this mission is already in my library.
+  useEffect(() => {
+    if (!user || !mission) return;
+    let cancelled = false;
+    void listSaved()
+      .then((items) => {
+        if (cancelled) return;
+        const found = items.find((i) => i.missionId === mission.id);
+        if (found) setSavedId(found.id);
+      })
+      .catch(() => {
+        // Library check is best-effort: the save button still works.
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [user, mission?.id]);
+
+  async function handleSave() {
+    if (!mission) return;
+    setSaveBusy(true);
+    setSaveNote('');
+    try {
+      const saved = await saveMission(mission.id);
+      setSavedId(saved.id);
+    } catch (err) {
+      setSaveNote(
+        err instanceof ApiError && err.status === 401
+          ? 'Your session expired — please log in again.'
+          : 'Could not save — is the API running?',
+      );
+    } finally {
+      setSaveBusy(false);
+    }
+  }
+
+  async function handleUnsave() {
+    if (!savedId) return;
+    setSaveBusy(true);
+    try {
+      await unsaveMission(savedId);
+      setSavedId(null);
+    } catch {
+      setSaveNote('Could not remove — try again.');
+    } finally {
+      setSaveBusy(false);
+    }
+  }
 
   if (!mission) {
     return (
@@ -75,7 +132,37 @@ export default function MissionDetailPage() {
           />
           Compare Mission
         </label>
+        {user ? (
+          savedId ? (
+            <button
+              type="button"
+              onClick={() => void handleUnsave()}
+              disabled={saveBusy}
+              className="flex min-h-[44px] items-center rounded-md border border-emerald-800 px-4 text-sm text-emerald-300 disabled:opacity-50"
+            >
+              ✓ Saved in My Library — Remove
+            </button>
+          ) : (
+            <button
+              type="button"
+              onClick={() => void handleSave()}
+              disabled={saveBusy}
+              className="flex min-h-[44px] items-center rounded-md bg-accent px-4 text-sm font-semibold text-space-950 disabled:opacity-50"
+            >
+              {saveBusy ? 'Saving…' : 'Save to My Library'}
+            </button>
+          )
+        ) : (
+          <Link
+            to="/login"
+            state={{ from: `/mission/${mission.id}` }}
+            className="flex min-h-[44px] items-center rounded-md border border-space-700 px-4 text-sm hover:bg-space-900"
+          >
+            Log in to save this mission
+          </Link>
+        )}
       </div>
+      {saveNote && <p className="mb-4 text-sm text-red-400">{saveNote}</p>}
 
       <div className="mb-6">
         <PayloadList mission={mission} />

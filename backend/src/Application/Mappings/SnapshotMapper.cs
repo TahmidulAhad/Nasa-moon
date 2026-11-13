@@ -42,7 +42,9 @@ public static class SnapshotMapper
             Label = s.Label,
             Source = s.Source,
             CreatedAt = s.CreatedAt,
-            MissionCount = missions.Count
+            MissionCount = missions.Count,
+            UserId = s.UserId,
+            IsLegacy = s.UserId is null
         };
     }
 
@@ -56,6 +58,8 @@ public static class SnapshotMapper
             Source = summary.Source,
             CreatedAt = summary.CreatedAt,
             MissionCount = summary.MissionCount,
+            UserId = summary.UserId,
+            IsLegacy = summary.IsLegacy,
             Missions = DeserializeMissions(s.MissionsJson)
         };
     }

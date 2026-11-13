@@ -21,7 +21,7 @@ public class SnapshotService : ISnapshotService
         _staticData = staticData;
     }
 
-    public async Task<SnapshotDto> CreateSnapshotAsync(CreateSnapshotDto dto, CancellationToken ct = default)
+    public async Task<SnapshotDto> CreateSnapshotAsync(CreateSnapshotDto dto, Guid? userId, CancellationToken ct = default)
     {
         if (string.IsNullOrWhiteSpace(dto.Label))
             throw new ArgumentException("Label is required.");
@@ -49,6 +49,7 @@ public class SnapshotService : ISnapshotService
         var snapshot = new DataSnapshot
         {
             Id = Guid.NewGuid(),
+            UserId = userId,
             Label = dto.Label.Trim(),
             Source = source,
             CreatedAt = DateTime.UtcNow,
@@ -58,28 +59,35 @@ public class SnapshotService : ISnapshotService
         return SnapshotMapper.ToSummaryDto(snapshot);
     }
 
-    public async Task<List<SnapshotDto>> ListSnapshotsAsync(CancellationToken ct = default)
+    public async Task<List<SnapshotDto>> ListSnapshotsAsync(Guid? userId, bool isAdmin, CancellationToken ct = default)
     {
-        var snapshots = await _snapshots.GetAllAsync(ct);
+        var snapshots = await _snapshots.GetVisibleAsync(userId, isAdmin, ct);
         return snapshots
             .OrderByDescending(s => s.CreatedAt)
             .Select(SnapshotMapper.ToSummaryDto)
             .ToList();
     }
 
-    public async Task<SnapshotDetailDto?> GetSnapshotAsync(Guid id, CancellationToken ct = default)
+    public async Task<SnapshotDetailDto?> GetSnapshotAsync(Guid id, Guid? userId, bool isAdmin, CancellationToken ct = default)
     {
         var snapshot = await _snapshots.GetByIdAsync(id, ct);
-        return snapshot is null ? null : SnapshotMapper.ToDetailDto(snapshot);
+        if (snapshot is null || !IsVisible(snapshot, userId, isAdmin)) return null;
+        return SnapshotMapper.ToDetailDto(snapshot);
     }
 
-    public async Task<bool> DeleteSnapshotAsync(Guid id, CancellationToken ct = default)
-        => await _snapshots.DeleteAsync(id, ct);
+    public async Task<bool> DeleteSnapshotAsync(Guid id, Guid? userId, bool isAdmin, CancellationToken ct = default)
+    {
+        var snapshot = await _snapshots.GetByIdAsync(id, ct);
+        // Legacy snapshots have no owner: only an admin may delete them.
+        if (snapshot is null) return false;
+        if (!isAdmin && (snapshot.UserId is null || snapshot.UserId != userId)) return false;
+        return await _snapshots.DeleteAsync(id, ct);
+    }
 
-    public async Task<SnapshotDiffDto?> CompareAsync(Guid fromId, string toId, CancellationToken ct = default)
+    public async Task<SnapshotDiffDto?> CompareAsync(Guid fromId, string toId, Guid? userId, bool isAdmin, CancellationToken ct = default)
     {
         var from = await _snapshots.GetByIdAsync(fromId, ct);
-        if (from is null) return null;
+        if (from is null || !IsVisible(from, userId, isAdmin)) return null;
 
         List<MissionDto> toMissions;
         string toLabel;
@@ -95,7 +103,7 @@ public class SnapshotService : ISnapshotService
         {
             if (!Guid.TryParse(toId, out var parsedToId)) return null;
             var to = await _snapshots.GetByIdAsync(parsedToId, ct);
-            if (to is null) return null;
+            if (to is null || !IsVisible(to, userId, isAdmin)) return null;
             toMissions = SnapshotMapper.DeserializeMissions(to.MissionsJson);
             toLabel = to.Label;
             toGuid = to.Id;
@@ -109,6 +117,14 @@ public class SnapshotService : ISnapshotService
         diff.ToLabel = toLabel;
         return diff;
     }
+
+    /// <summary>
+    /// Visibility rule (matches the repository's GetVisibleAsync): admins see
+    /// everything; owners see their own snapshots; everyone sees legacy
+    /// (ownerless) snapshots.
+    /// </summary>
+    public static bool IsVisible(DataSnapshot snapshot, Guid? userId, bool isAdmin)
+        => isAdmin || snapshot.UserId is null || (userId.HasValue && snapshot.UserId == userId.Value);
 
     /// <summary>
     /// Pure diff between two mission sets, keyed on mission id.

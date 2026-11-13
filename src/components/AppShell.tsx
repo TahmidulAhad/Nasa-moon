@@ -1,6 +1,7 @@
 import { lazy, Suspense, useEffect, useRef, useState } from 'react';
 import { NavLink, Outlet, useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import { useMotionPrefs } from '../lib/motionPrefs';
+import { useAuth } from '../lib/authContext';
 import { hasWebGL } from '../lib/webgl';
 import CompareTray from './CompareTray';
 import Loading from './Loading';
@@ -38,6 +39,7 @@ export default function AppShell() {
   const search = compare ? `?compare=${compare}` : '';
   const { pathname } = useLocation();
   const navigate = useNavigate();
+  const { user, logout } = useAuth();
   const { reduced } = useMotionPrefs();
   const quality = useSceneQuality();
   const { navRequest, mapMode } = useSceneFlags();
@@ -192,6 +194,82 @@ export default function AppShell() {
               </NavLink>
             ))}
           </nav>
+          {/* Researcher account: log in / register when logged out; My
+          Library + profile + log out (and Admin for admins) when logged in. */}
+          <div className="hidden shrink-0 items-center gap-1 md:flex">
+            {user ? (
+              <>
+                <NavLink
+                  to="/my-library"
+                  className={({ isActive }) =>
+                    `flex min-h-[44px] shrink-0 items-center rounded-md px-3 text-sm transition-colors duration-200 ${
+                      isActive
+                        ? 'bg-space-800 text-white shadow-glow'
+                        : 'text-slate-300 hover:bg-space-900'
+                    }`
+                  }
+                >
+                  My Library
+                </NavLink>
+                {user.role === 'Admin' && (
+                  <NavLink
+                    to="/admin"
+                    className={({ isActive }) =>
+                      `flex min-h-[44px] shrink-0 items-center rounded-md px-3 text-sm transition-colors duration-200 ${
+                        isActive
+                          ? 'bg-space-800 text-white shadow-glow'
+                          : 'text-amber-300 hover:bg-space-900'
+                      }`
+                    }
+                  >
+                    Admin
+                  </NavLink>
+                )}
+                <NavLink
+                  to="/profile"
+                  className={({ isActive }) =>
+                    `flex min-h-[44px] shrink-0 items-center rounded-md px-3 text-sm transition-colors duration-200 ${
+                      isActive
+                        ? 'bg-space-800 text-white shadow-glow'
+                        : 'text-slate-300 hover:bg-space-900'
+                    }`
+                  }
+                >
+                  {user.displayName}
+                </NavLink>
+                <button
+                  type="button"
+                  onClick={() => {
+                    void logout().then(() => navigate('/', { replace: true }));
+                  }}
+                  className="flex min-h-[44px] shrink-0 items-center rounded-md px-3 text-sm text-slate-300 hover:bg-space-900"
+                >
+                  Log out
+                </button>
+              </>
+            ) : (
+              <>
+                <NavLink
+                  to="/login"
+                  className={({ isActive }) =>
+                    `flex min-h-[44px] shrink-0 items-center rounded-md px-3 text-sm transition-colors duration-200 ${
+                      isActive
+                        ? 'bg-space-800 text-white shadow-glow'
+                        : 'text-slate-300 hover:bg-space-900'
+                    }`
+                  }
+                >
+                  Log in
+                </NavLink>
+                <NavLink
+                  to="/register"
+                  className="flex min-h-[44px] shrink-0 items-center rounded-md bg-accent px-3 text-sm font-semibold text-space-950"
+                >
+                  Register
+                </NavLink>
+              </>
+            )}
+          </div>
           <button
             type="button"
             aria-label="Scroll navigation right"
@@ -247,9 +325,57 @@ export default function AppShell() {
                 {label}
               </NavLink>
             ))}
-          </nav>
-        </div>
-      )}
+              {user ? (
+                <>
+                  <NavLink
+                    to="/my-library"
+                    className="flex min-h-[44px] items-center rounded-md px-3 text-sm text-slate-300 hover:bg-space-900"
+                  >
+                    My Library
+                  </NavLink>
+                  {user.role === 'Admin' && (
+                    <NavLink
+                      to="/admin"
+                      className="flex min-h-[44px] items-center rounded-md px-3 text-sm text-amber-300 hover:bg-space-900"
+                    >
+                      Admin
+                    </NavLink>
+                  )}
+                  <NavLink
+                    to="/profile"
+                    className="flex min-h-[44px] items-center rounded-md px-3 text-sm text-slate-300 hover:bg-space-900"
+                  >
+                    {user.displayName} (Profile)
+                  </NavLink>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      void logout().then(() => navigate('/', { replace: true }));
+                    }}
+                    className="flex min-h-[44px] items-center rounded-md px-3 text-left text-sm text-slate-300 hover:bg-space-900"
+                  >
+                    Log out
+                  </button>
+                </>
+              ) : (
+                <>
+                  <NavLink
+                    to="/login"
+                    className="flex min-h-[44px] items-center rounded-md px-3 text-sm text-slate-300 hover:bg-space-900"
+                  >
+                    Log in
+                  </NavLink>
+                  <NavLink
+                    to="/register"
+                    className="flex min-h-[44px] items-center rounded-md px-3 text-sm font-semibold text-accent hover:bg-space-900"
+                  >
+                    Register
+                  </NavLink>
+                </>
+              )}
+            </nav>
+          </div>
+        )}
       </header>
 
       <main className="relative z-10 mx-auto w-full max-w-6xl flex-1 px-4 py-6">

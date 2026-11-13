@@ -1,4 +1,8 @@
 import type { Mission, MissionStatus, Payload, Source } from './types';
+import { authFetch, ApiError } from './auth';
+import { getApiBaseUrl, isApiConfigured } from './apiConfig';
+
+export { getApiBaseUrl, isApiConfigured };
 
 // ---------------------------------------------------------------------------
 // API client for the ASP.NET Core backend (backend/src/Api).
@@ -6,15 +10,6 @@ import type { Mission, MissionStatus, Payload, Source } from './types';
 // app never calls the API — src/lib/missions.ts keeps the bundled static
 // missions.json as the data source, so the site never breaks.
 // ---------------------------------------------------------------------------
-
-/** Base URL of the API, e.g. http://localhost:5083. Empty when not configured. */
-export function getApiBaseUrl(): string {
-  return ((import.meta.env.VITE_API_URL as string | undefined) ?? '').replace(/\/+$/, '');
-}
-
-export function isApiConfigured(): boolean {
-  return getApiBaseUrl().length > 0;
-}
 
 /** How long to wait for the API before falling back to the static data. */
 const FETCH_TIMEOUT_MS = 3000;
@@ -99,6 +94,10 @@ export interface SnapshotSummary {
   source: string;
   createdAt: string;
   missionCount: number;
+  /** Owner of the snapshot; null for legacy (ownerless, public) snapshots. */
+  userId: string | null;
+  /** True for snapshots saved before researcher accounts existed. */
+  isLegacy: boolean;
 }
 
 export interface SnapshotDetail extends SnapshotSummary {
@@ -146,9 +145,10 @@ export async function listSnapshots(): Promise<SnapshotSummary[]> {
   return fetchJson<SnapshotSummary[]>('/api/snapshots', SNAPSHOT_TIMEOUT_MS);
 }
 
-/** Save the current dataset as a named snapshot ("live" or "static"). */
+/** Save the current dataset as a named snapshot ("live" or "static").
+ * Login required — the snapshot belongs to the caller. */
 export async function createSnapshot(label: string, source: 'live' | 'static'): Promise<SnapshotSummary> {
-  return requestJson<SnapshotSummary>(
+  return authFetch<SnapshotSummary>(
     '/api/snapshots',
     {
       method: 'POST',
@@ -173,17 +173,18 @@ export async function getSnapshot(id: string): Promise<SnapshotDetail | undefine
   }
 }
 
-/** Delete a snapshot. Returns false when it did not exist. */
+/** Delete a snapshot. Returns false when it did not exist (or is not
+ * yours — the API answers 404 for other researchers' snapshots). */
 export async function deleteSnapshot(id: string): Promise<boolean> {
   try {
-    await requestJson<unknown>(
+    await authFetch<unknown>(
       `/api/snapshots/${encodeURIComponent(id)}`,
       { method: 'DELETE' },
       SNAPSHOT_TIMEOUT_MS,
     );
     return true;
   } catch (err) {
-    if (err instanceof Error && err.message.includes('API 404')) return false;
+    if (err instanceof ApiError && err.status === 404) return false;
     throw err;
   }
 }

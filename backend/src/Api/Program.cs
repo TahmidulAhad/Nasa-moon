@@ -1,7 +1,13 @@
+using System.Text;
+using System.Threading.RateLimiting;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using NasaMoon.Application;
 using NasaMoon.Infrastructure;
 using NasaMoon.Infrastructure.SeedData;
+using NasaMoon.Infrastructure.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,6 +18,42 @@ builder.Services.AddInfrastructure(builder.Configuration);
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+// JWT authentication. The secret is resolved once here (same JwtOptions the
+// token service uses): env var Jwt__Secret on Render, user secrets locally.
+// In Development a missing secret falls back to a random ephemeral one;
+// in Production startup fails fast without a real secret.
+var jwtOptions = JwtOptions.FromConfiguration(builder.Configuration, builder.Environment.IsDevelopment());
+builder.Services.AddSingleton(jwtOptions);
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
+    {
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuerSigningKey = true,
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtOptions.Secret)),
+            ValidateIssuer = true,
+            ValidIssuer = jwtOptions.Issuer,
+            ValidateAudience = true,
+            ValidAudience = jwtOptions.Audience,
+            ValidateLifetime = true,
+            ClockSkew = TimeSpan.Zero
+        };
+    });
+builder.Services.AddAuthorization();
+
+// Brute-force guard for login/register: 10 attempts per minute per IP.
+builder.Services.AddRateLimiter(options =>
+{
+    options.AddPolicy("auth", httpContext =>
+        RateLimitPartition.GetFixedWindowLimiter(
+            partitionKey: httpContext.Connection.RemoteIpAddress?.ToString() ?? "unknown",
+            factory: _ => new FixedWindowRateLimiterOptions
+            {
+                PermitLimit = 10,
+                Window = TimeSpan.FromMinutes(1)
+            }));
+});
 
 // The React frontend (Vite dev server + deployed Vercel site) calls this API.
 builder.Services.AddCors(options =>
@@ -34,6 +76,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseCors("Frontend");
+app.UseRateLimiter();
+app.UseAuthentication();
 app.UseAuthorization();
 
 // Friendly landing page: the API root used to return 404, which looked
