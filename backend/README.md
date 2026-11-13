@@ -92,14 +92,33 @@ cd src/Api
 dotnet run
 ```
 
-Then open `https://localhost:5001/swagger` and try `GET /api/missions`.
+Then open `http://localhost:5083/swagger` and try `GET /api/missions`.
 
-### Frontend wiring (next step)
+### Frontend wiring (done)
 
-Point the React app at the API instead of the static JSON, e.g. in a `.env` file:
+The React app is wired to this API — see `src/lib/api.ts`:
 
+- `VITE_API_URL` (copy `.env.example` to `.env`) points at the API:
+  `VITE_API_URL=http://localhost:5083`
+- `main.tsx` awaits `initMissions()` before the app renders: the app fetches
+  `GET /api/missions` and uses the API data. **If `VITE_API_URL` is unset or
+  the API is unreachable, the site silently falls back to the bundled static
+  `src/data/missions.json`** — it never breaks.
+- `src/lib/api.ts` also exports `getMissionById(id)` and `getPayloads(missionId)`
+  (`GET /api/missions/{id}`, `GET /api/missions/{id}/payloads`), and maps the
+  API DTOs to the exact `Mission` shape the UI already expects.
+
+Run backend + frontend together locally:
+
+```bash
+# Terminal 1 — API (from backend/)
+cd src/Api && dotnet run            # http://localhost:5083
+
+# Terminal 2 — frontend (from repo root)
+cp .env.example .env                # VITE_API_URL=http://localhost:5083
+npm install && npm run dev          # http://localhost:5173
 ```
-VITE_API_URL=https://localhost:5001
-```
 
-and fetch `/api/missions` in place of `missions.json`.
+Live deployment still needs a host for the API (e.g. Render / Railway) plus a
+real PostgreSQL database (Neon) — then set `VITE_API_URL` to the deployed API
+URL in the frontend's hosting settings (Vercel env vars).
