@@ -19,7 +19,8 @@ builder.Services.AddCors(options =>
     options.AddPolicy("Frontend", policy => policy
         .WithOrigins(
             "http://localhost:5173",
-            "https://clps-agent-kit.vercel.app")
+            "https://clps-agent-kit.vercel.app",
+            "https://nasa-moon.vercel.app")
         .AllowAnyHeader()
         .AllowAnyMethod());
 });
