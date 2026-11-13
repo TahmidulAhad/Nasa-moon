@@ -1,0 +1,744 @@
+[
+  {
+    "id": "to2-ab",
+    "name": "Peregrine Mission 1",
+    "taskOrder": "TO2-AB",
+    "provider": "Astrobotic",
+    "lander": "Peregrine",
+    "status": "failed",
+    "launchDate": "2024-01-08",
+    "launchDatePrecision": "day",
+    "landingDate": null,
+    "landingDatePrecision": null,
+    "landingSite": {
+      "name": "Sinus Viscositatis",
+      "latitude": 35.25,
+      "longitude": -40.99,
+      "region": "near side",
+      "coordinatesApproximate": true
+    },
+    "payloads": [
+      {
+        "name": "Laser Retroreflector Array (LRA)",
+        "organization": "NASA Goddard Space Flight Center (GSFC)",
+        "purpose": "A retroreflector bounces any light that shines on it directly backward (180° from the incoming light). The LRA is a collection of eight of these, each a 1.25-cm diameter glass corner cube prism, all embedded in an aluminum hemisphere and mounted to the lander deck.",
+        "type": "Passive optical device that reflects laser light directly backward (for laser ranging)"
+      },
+      {
+        "name": "Neutron Spectrometer System (NSS)",
+        "organization": "NASA ARC",
+        "purpose": "The NSS instrument will determine the abundance of hydrogen-bearing materials and the bulk regolith composition at the landing site and measure any time variations in hydrogenous volatile abundance during the diurnal cycle. NSS can measure the total volume of hydrogen up to three feet below the surface.",
+        "type": "Neutron Spectrometer"
+      },
+      {
+        "name": "Linear Energy Transfer Spectrometer (LETS)",
+        "organization": "NASA JSC",
+        "purpose": "The Linear Energy Transfer Spectrometer (LETS) is a radiation monitor that is derived from heritage hardware flown on Orion EFT-1 that will enable acquisition of knowledge of the lunar radiation environment and demonstrate the capabilities of a system on the lunar surface.",
+        "type": "Radiation Sensor"
+      },
+      {
+        "name": "Near-Infrared Volatile Spectrometer System (NIRVSS)",
+        "organization": "NASA ARC",
+        "purpose": "The payload includes a spectrometer context imager and a longwave calibration sensor. It measures surface and subsurface hydration (H2O and OH) and CO2 and methane (CH4) while simultaneously mapping surface morphology and surface temperature.",
+        "type": "Two-channel Near-infrared Point Spectrometer"
+      },
+      {
+        "name": "Peregrine Ion-Trap Mass Spectrometer (PITMS)",
+        "organization": "NASA GSFC",
+        "purpose": "PITMS will characterize the lunar exosphere after descent and landing, and throughout the lunar day, to understand the release and movement of volatile species.",
+        "type": "Ion Trap Mass Spectrometer"
+      }
+    ],
+    "payloadCountReported": 5,
+    "objective": null,
+    "outcomeSummary": "Astrobotic's Peregrine lunar lander launched on January 8, 2024 to deliver 5 NASA CLPS science payloads to Sinus Viscositatis. It did not land.",
+    "notes": "Manifest note: the page lists five more payloads (SEAL, MSolo, PILS, MAG, NMLS) that \"are being reallocated to future lunar delivery missions\"; they are not counted here.",
+    "sources": [
+      { "label": "NASA CLPS Deliveries", "url": "https://science.nasa.gov/lunar-science/clps-deliveries/", "accessed": "2026-09-29" },
+      { "label": "NASA CLPS Deliveries — TO2-AB", "url": "https://science.nasa.gov/lunar-science/clps-deliveries/to2-astrobotic/", "accessed": "2026-09-29" },
+      { "label": "USGS Gazetteer — Sinus Viscositatis", "url": "https://planetarynames.wr.usgs.gov/Feature/16118", "accessed": "2026-09-29" }
+    ],
+    "lastVerified": "2026-09-29"
+  },
+  {
+    "id": "to2-im",
+    "name": "IM-1",
+    "taskOrder": "TO2-IM",
+    "provider": "Intuitive Machines",
+    "lander": "Nova-C",
+    "status": "completed",
+    "launchDate": "2024-02-15",
+    "launchDatePrecision": "day",
+    "landingDate": "2024-02-22",
+    "landingDatePrecision": "day",
+    "landingSite": {
+      "name": "Malapert A",
+      "latitude": -80.18,
+      "longitude": -3.79,
+      "region": "south polar",
+      "coordinatesApproximate": true
+    },
+    "payloads": [
+      {
+        "name": "Lunar Node 1 Navigation Demonstrator (LN-1)",
+        "organization": "NASA MSFC",
+        "purpose": "CubeSat-sized flight hardware experiment that integrates navigation and communication functionality for autonomous navigation to support future surface and orbital operations. LN-1 uses Multi-spacecraft Autonomous Positioning System (MAPS) algorithms and standard GPS-like navigation signal.",
+        "type": "Navigation beacon"
+      },
+      {
+        "name": "Stereo Cameras for Lunar Plume-Surface Studies (SCALPSS)",
+        "organization": "NASA LaRC",
+        "purpose": "SCALPSS will use four cameras (two stereo pairs) that will capture video and still image data of the lander's descent engine plume of dust as the plume starts to impact the lunar surface until after engine shut off. Data will be used to assess the effect of the engine plumes on the landing site, the landing vehicle, and nearby assets and sites.",
+        "type": "Cameras"
+      },
+      {
+        "name": "Radio-wave Observations at the Lunar Surface of the photo Electron Sheath (ROLSES)",
+        "organization": "NASA GSFC",
+        "purpose": "The ROLSES payload will employ a low-frequency radio receiver system to determine the density of this electron sheath. The instrument is a low-frequency radio spectrometer to provide radio spectra (from 10 kHz - 10 MHz, or possibly 30 MHz) ~0-2 m above the lunar surface.",
+        "type": "Low-frequency radio astronomy receiver system"
+      },
+      {
+        "name": "Navigation Doppler Lidar for Precise Velocity and Range Sensing (NDL)",
+        "organization": "NASA LaRC",
+        "purpose": "NDL is a LIDAR-based (Light Detection and Ranging) descent and landing sensor. This instrument operates on the same principles of radar but uses pulses of light from a laser instead of radio waves.",
+        "type": "Guidance and navigation sensor"
+      },
+      {
+        "name": "Radio Frequency Mass Gauge (RFMG)",
+        "organization": "NASA GRC",
+        "purpose": "Antennae that are installed inside the liquid oxygen and liquid methane fuel tanks of the lander to gauge the quantity of liquid fuel as it is used. A goal of long-range space missions in the future is the ability to use cryogenic propellants.",
+        "type": "Low-gravity propellant quantity gauge"
+      },
+      {
+        "name": "Laser Retroreflector (LRA)",
+        "organization": "NASA GSFC",
+        "purpose": "A retroreflector bounces any light that shines on it directly backward (180 degrees from the incoming light). The LRA is a collection of eight of these, each a 1.25-cm diameter glass corner cube prism, all embedded in an aluminum hemisphere and is mounted to the lander deck.",
+        "type": "Passive optical device that reflects laser light directly backward (for laser ranging)"
+      }
+    ],
+    "payloadCountReported": 6,
+    "objective": "NASA sent scientific payloads to the lunar south pole aboard the Intuitive Machines Nova-C lander as a part of NASA's CLPS initiative.",
+    "outcomeSummary": "Intuitive Machines's Nova-C lunar lander launched on February 15, 2024 to deliver 6 NASA CLPS science payloads to Malapert A. It landed on February 22, 2024.",
+    "notes": "Checked sources confirm the landing but give no surface-outcome detail. The name \"IM-1\" comes from the SCALPSS 1.1 text on the TO19D page (\"Intuitive Machines' IM-1 mission\").",
+    "sources": [
+      { "label": "NASA CLPS Deliveries", "url": "https://science.nasa.gov/lunar-science/clps-deliveries/", "accessed": "2026-09-29" },
+      { "label": "NASA CLPS Deliveries — TO2-IM", "url": "https://science.nasa.gov/lunar-science/clps-deliveries/to2-im/", "accessed": "2026-09-29" },
+      { "label": "USGS Gazetteer — Malapert A", "url": "https://planetarynames.wr.usgs.gov/Feature/11081", "accessed": "2026-09-29" }
+    ],
+    "lastVerified": "2026-09-29"
+  },
+  {
+    "id": "to19d",
+    "name": "TO19D",
+    "taskOrder": "TO19D",
+    "provider": "Firefly",
+    "lander": "Blue Ghost 1",
+    "status": "completed",
+    "launchDate": null,
+    "launchDatePrecision": null,
+    "landingDate": null,
+    "landingDatePrecision": null,
+    "landingSite": {
+      "name": "Mare Crisium",
+      "latitude": 16.18,
+      "longitude": 59.1,
+      "region": "near side",
+      "coordinatesApproximate": true
+    },
+    "payloads": [
+      {
+        "name": "Next Generation Lunar Retroreflector (NGLR)",
+        "organization": "University of Maryland",
+        "purpose": "The Next Generation Lunar Retroreflector (NGLR) serves as a target for lasers on Earth to precisely measure the distance between Earth and the Moon. The NGLR will reflect very short laser pulses from Earth-based Lunar Laser Ranging Observatories (LLROs).",
+        "type": "Cube Corner Retroreflector, housing, and mounting structure"
+      },
+      {
+        "name": "Radiation Tolerant Computer System (RadPC)",
+        "organization": "Montana State University",
+        "purpose": "The Radiation Tolerant Computer (RadPC) is a technology demonstration of a radiation tolerant computer system. RadPC implements a set of fault mitigation strategies to recover from single event effects (SEEs) caused by ionizing radiation.",
+        "type": "Radiation tolerant computer system: payload enclosure, dosimeter, thermal management system, Field Programmable Gate array circuit"
+      },
+      {
+        "name": "Regolith Adherence Characterization (RAC)",
+        "organization": "Aegis Aerospace, Inc.",
+        "purpose": "RAC will determine how lunar regolith sticks to a range of materials exposed to the Moon's environment throughout the lunar day. Its purpose is to help scientists progress in their endeavor to protect spacecraft, spacesuits and habitats from abrasion.",
+        "type": "Dust collector/detector - Collection of panels with different materials"
+      },
+      {
+        "name": "Lunar Magnetotelluric Sounder (LMS)",
+        "organization": "Southwest Research Institute",
+        "purpose": "The Lunar Magnetotelluric Sounder measures natural time-varying electric and magnetic fields from the solar wind and Earth's magnetosphere to determine the electrical conductivity profile of the Moon's interior. This investigation will constrain the temperature structure and history of the Moon.",
+        "type": "Electrometer and Magnetometer"
+      },
+      {
+        "name": "Lunar Environment Heliospheric X-ray Imager (LEXI)",
+        "organization": "Boston University",
+        "purpose": "LEXI is a wide field-of-view soft X-ray imager that will image Earth's magnetosheath and magnetopause to study how energy is coupled from the flowing solar wind into Earth's space environment to generate geomagnetic storms and space weather.",
+        "type": "nine lobster-eye, micropore, optical elements on a single mounting plate with a 75 cm radius of curvature."
+      },
+      {
+        "name": "Lunar PlanetVac (LPV)",
+        "organization": "Honeybee Robotics",
+        "purpose": "PlanetVac will collect samples of lunar regolith (soil) from the surface using a pneumatic technique (powered by compressed gas) and its delivery system will transfer the samples to other instruments that will analyze the material.",
+        "type": "Pneumatic regolith sampling system"
+      },
+      {
+        "name": "Lunar Instrumentation for Subsurface Thermal Exploration with Rapidity (LISTER)",
+        "organization": "Texas Tech University",
+        "purpose": "LISTER will measure the flow of heat originating from the interior of the Moon. It is designed to penetrate 2- to 3-m depth into the Moon's rock and dust surface (the lunar regolith) and determine the heat flow as a product of two separate measurements: thermal gradient and thermal conductivity.",
+        "type": "pneumatically-drilled subsurface thermal probe"
+      },
+      {
+        "name": "Stereo Cameras for Lunar Plume-Surface Studies (SCALPSS) 1.1",
+        "organization": "NASA LaRC",
+        "purpose": "SCALPSS 1.1 is a slightly enhanced version of the original SCALPSS payload, which deployed as a part of CLPS Task Order 2-IM (Intuitive Machines' IM-1 mission). It will capture video and still image data of the lunar surface prior to, during, and after the lander's descent engine plumes interact with the lunar surface.",
+        "type": "Camera"
+      },
+      {
+        "name": "Electrodynamic Dust Shield (EDS)",
+        "organization": "Electrostatics and Surface Physics Laboratory at NASA Kennedy Space Center (KSC)",
+        "purpose": "Hazardous dust is present on Mars, the Moon, and comets. The Electrodynamic Dust Shield (EDS) is an active dust mitigation technology that uses electric fields to move dust from surfaces and to prevent dust accumulation on surfaces.",
+        "type": "Dust Shield"
+      },
+      {
+        "name": "Lunar GNSS Receiver Experiment (LuGRE)",
+        "organization": "NASA Goddard Space Flight Center (GSFC)",
+        "purpose": "The Lunar GNSS Receiver Experiment (LuGRE) will demonstrate Global Navigation Satellite System (GNSS)-based spacecraft navigation in transit to the Moon and on the lunar surface.",
+        "type": "weak-signal GNSS radio receiver; a 14dBi high-gain GNSS antenna; and a low-noise amplifier"
+      }
+    ],
+    "payloadCountReported": 10,
+    "objective": "It delivered 10 NASA science payloads to the lunar surface that will provide invaluable data to the lunar science community by addressing topics like regolith behavior, interior composition, and more.",
+    "outcomeSummary": "Firefly's Blue Ghost 1 lunar lander delivered 10 NASA CLPS science payloads to Mare Crisium.",
+    "notes": "Launch and landing dates are not stated on the checked sources (2026-09-29); tracked in docs/DATA_GAPS.md.",
+    "sources": [
+      { "label": "NASA CLPS Deliveries", "url": "https://science.nasa.gov/lunar-science/clps-deliveries/", "accessed": "2026-09-29" },
+      { "label": "NASA CLPS Deliveries — TO19D", "url": "https://science.nasa.gov/lunar-science/clps-deliveries/to19d-firefly/", "accessed": "2026-09-29" },
+      { "label": "USGS Gazetteer — Mare Crisium", "url": "https://planetarynames.wr.usgs.gov/Feature/3671", "accessed": "2026-09-29" }
+    ],
+    "lastVerified": "2026-09-29"
+  },
+  {
+    "id": "to20a",
+    "name": "TO20A",
+    "taskOrder": "TO20A",
+    "provider": "Astrobotic",
+    "lander": "Griffin-1",
+    "status": "upcoming",
+    "launchDate": null,
+    "launchDatePrecision": null,
+    "landingDate": null,
+    "landingDatePrecision": null,
+    "landingSite": {
+      "name": "Mons Mouton",
+      "latitude": -84.6,
+      "longitude": 31.0,
+      "region": "south polar",
+      "coordinatesApproximate": true
+    },
+    "payloads": [
+      {
+        "name": "Laser Retroreflector Array (LRA)",
+        "organization": "GSFC",
+        "purpose": "The Laser Retroreflector Array (LRA) is the ultimate sidekick to any lunar surface payload suite. Payload-collected data needs precise locations to maximize its effectiveness and accuracy, and LRA does exactly that.",
+        "type": null
+      }
+    ],
+    "payloadCountReported": null,
+    "objective": "Voyager's Griffin-1 lander will deliver NASA's Lunar Retroreflector Array (LRA) to Mons Mouton (South Pole).",
+    "outcomeSummary": null,
+    "notes": "Source conflict (docs/DATA_GAPS.md): the deliveries list (2026-09-29) says \"Astrobotic's Griffin lander will perform a delivery test to Mons Mouton at the lunar south pole in 2025\" while the per-delivery page says \"Voyager's Griffin-1 lander will deliver NASA's Lunar Retroreflector Array (LRA) to Mons Mouton (South Pole)\". Provider kept as \"Astrobotic\" (the deliveries list is the vendor source); the page wording is preserved here. The page's Editor's Note: \"On September 19, 2025, NASA announced that VIPER and its instruments will be delivered to Mons Mouton by a Blue Origin Blue Moon MK-1 lander as part of task order CS-7.\" The list's \"in 2025\" delivery-test wording is stale as of 2026-09-29. Only LRA is listed; no payload count given.",
+    "sources": [
+      { "label": "NASA CLPS Deliveries", "url": "https://science.nasa.gov/lunar-science/clps-deliveries/", "accessed": "2026-09-29" },
+      { "label": "NASA CLPS Deliveries — TO20A", "url": "https://science.nasa.gov/lunar-science/clps-deliveries/to20a-astrobotic/", "accessed": "2026-09-29" },
+      { "label": "USGS Gazetteer — Mons Mouton", "url": "https://planetarynames.wr.usgs.gov/Feature/16070", "accessed": "2026-09-29" }
+    ],
+    "lastVerified": "2026-09-29"
+  },
+  {
+    "id": "prime-1",
+    "name": "IM-2",
+    "taskOrder": "PRIME-1",
+    "provider": "Intuitive Machines",
+    "lander": "Nova-C",
+    "status": "partial",
+    "launchDate": null,
+    "launchDatePrecision": null,
+    "landingDate": "2025-03-06",
+    "landingDatePrecision": "day",
+    "landingSite": {
+      "name": "Mons Mouton",
+      "latitude": -84.6,
+      "longitude": 31.0,
+      "region": "south polar",
+      "coordinatesApproximate": true
+    },
+    "payloads": [
+      {
+        "name": "The Regolith and Ice Drill for Exploring New Terrain (TRIDENT)",
+        "organization": "Honeybee Robotics",
+        "purpose": "The first half of the PRIME-1 super team, The Regolith and Ice Drill for Exploring New Terrain (or TRIDENT) is a drill engineered specifically for the harsh lunar environment. It can hammer through extremely hard materials using its rotary-percussive technology, ensuring retrieval of samples up to its maximum depth of 3 feet.",
+        "type": null
+      },
+      {
+        "name": "Mass Spectrometer for Observing Lunar Operations (MSOLO)",
+        "organization": "NASA John F. Kennedy Space Center",
+        "purpose": "Mass Spectrometer for Observing Lunar Operations (MSOLO) is a mass spectrometer intended to analyze materials extracted by TRIDENT. Mass spectrometers give us the ability to distinguish and measure elements by charging ions or molecules, separating, and weighing them.",
+        "type": null
+      }
+    ],
+    "payloadCountReported": 3,
+    "objective": "History and volatiles are the two most important takeaways we were looking for from PRIME-1.",
+    "outcomeSummary": "IM-2 touched down at Mons Mouton at approximately 11:30 a.m. March 6, 2025. Because the lander was on its side, Polar Resources Ice Mining Experiment 1 (PRIME-1) instruments were unable to accomplish their science, exploration, and technology goals.",
+    "notes": "Payload count conflict (docs/DATA_GAPS.md): the deliveries list says \"three NASA CLPS science payloads\"; the per-delivery page says \"the suite of two instruments\" and lists TRIDENT and MSOLO. payloadCountReported keeps the deliveries-list figure (3); payloads[] has the 2 detailed entries. Status \"partial\" is our enum mapping: the delivery landed but the PRIME-1 goals were not accomplished (per the source wording).",
+    "sources": [
+      { "label": "NASA CLPS Deliveries", "url": "https://science.nasa.gov/lunar-science/clps-deliveries/", "accessed": "2026-09-29" },
+      { "label": "NASA CLPS Deliveries — PRIME-1", "url": "https://science.nasa.gov/lunar-science/clps-deliveries/prime-1-im/", "accessed": "2026-09-29" },
+      { "label": "USGS Gazetteer — Mons Mouton", "url": "https://planetarynames.wr.usgs.gov/Feature/16070", "accessed": "2026-09-29" }
+    ],
+    "lastVerified": "2026-09-29"
+  },
+  {
+    "id": "cp-11",
+    "name": "IM-3",
+    "taskOrder": "CP-11",
+    "provider": "Intuitive Machines",
+    "lander": "Nova-C",
+    "status": "upcoming",
+    "launchDate": null,
+    "launchDatePrecision": null,
+    "landingDate": "2026",
+    "landingDatePrecision": "year",
+    "landingSite": {
+      "name": "Reiner Gamma",
+      "latitude": 7.39,
+      "longitude": -58.96,
+      "region": "near side",
+      "coordinatesApproximate": true
+    },
+    "payloads": [
+      {
+        "name": "Lunar Vertex (LVx)",
+        "organization": "Johns Hopkins University/Applied Physics Laboratory",
+        "purpose": "Lunar Vertex (LVx) is a joint lander and rover payload suite that will land at Reiner Gamma on the lunar nearside, which is also known as a lunar swirl. The investigation will look closely at how these areas interact with the solar wind, the high-speed stream of energetic particles from the Sun.",
+        "type": "magnetometers on both the lander and rover, ion-electron plasma spectrometer, cameras on the lander, and a multispectral microscope on the rover."
+      },
+      {
+        "name": "Cooperative Autonomous Distributed Robotic Exploration (CADRE)",
+        "organization": "JPL",
+        "purpose": "The CADRE robots are a set of suitcase-sized mobile robots that will test autonomous robotic exploration capabilities on the lunar surface. Each robot contains an onboard computer with a wireless radio for communication and a stereo camera for sensing the environment in front of it and capturing 3D imagery.",
+        "type": "Mini-rovers and Ground Penetrating Radar"
+      },
+      {
+        "name": "ESA's MoonLIGHT Pointing Actuator (MPAc)",
+        "organization": "ESA",
+        "purpose": "Moon Laser Instrumentation for General relativity High accuracy Test (MoonLIGHT) shares its design with the Next Generation Laser Retroreflector NGLR from UMD flying on TO19D. Its main applications are geophysics, precision tests of general relativity, and new theories of fundamental relativistic gravity.",
+        "type": "Large reflector"
+      },
+      {
+        "name": "KASI's Lunar Space Environment Monitor (LUSEM)",
+        "organization": "Korea Astronomy and Space Science Institute (KASI)",
+        "purpose": "LUSEM will detect high energy particles and monitor variations in the near-surface space environment when the Moon is inside and outside the Earth's magnetotail - the trailing end of the magnetic fields surrounding our planet, which can serve as a buffer for incoming radiation.",
+        "type": "A pair of Solid-State Telescopes (SST)"
+      }
+    ],
+    "payloadCountReported": 4,
+    "objective": "Intuitive Machines' Nova-C lander will deliver four NASA CLPS science payloads to Reiner Gamma on the lunar nearside in 2026.",
+    "outcomeSummary": null,
+    "notes": "Landing year 2026 from the per-delivery page wording (\"on the lunar nearside in 2026\"); no day/month given. The mission name \"IM-3\" comes from the deliveries-list image alt text (\"Intuitive Machines Nova-C IM-3 lander\"). Per-delivery page was JS-protected for plain fetch; read via a real browser on 2026-09-29.",
+    "sources": [
+      { "label": "NASA CLPS Deliveries", "url": "https://science.nasa.gov/lunar-science/clps-deliveries/", "accessed": "2026-09-29" },
+      { "label": "NASA CLPS Deliveries — CP-11", "url": "https://science.nasa.gov/lunar-science/clps-deliveries/cp-11/", "accessed": "2026-09-29" },
+      { "label": "USGS Gazetteer — Reiner Gamma", "url": "https://planetarynames.wr.usgs.gov/Feature/4987", "accessed": "2026-09-29" }
+    ],
+    "lastVerified": "2026-09-29"
+  },
+  {
+    "id": "cp-12",
+    "name": "CP-12",
+    "taskOrder": "CP-12",
+    "provider": "Team Draper",
+    "lander": "APEX 1.0",
+    "status": "upcoming",
+    "launchDate": null,
+    "launchDatePrecision": null,
+    "landingDate": null,
+    "landingDatePrecision": null,
+    "landingSite": {
+      "name": "Schrödinger Basin",
+      "latitude": -74.73,
+      "longitude": 132.93,
+      "region": "far side",
+      "coordinatesApproximate": true
+    },
+    "payloads": [
+      {
+        "name": "Farside Seismic Suite (FSS)",
+        "organization": "NASA's Jet Propulsion Laboratory",
+        "purpose": "The Farside Seismic Suite (FSS), one of the two payloads to be delivered to Schrödinger basin, will carry two seismometers: the vertical Very Broadband seismometer and the Short Period sensor. FSS will return the agency's first seismic data from the far side of the Moon, helping scientists to understand tectonic activity there.",
+        "type": "Seismometers"
+      },
+      {
+        "name": "Lunar Interior Temperature and Materials Suite (LITMS)",
+        "organization": "Southwest Research Institute",
+        "purpose": "The Lunar Interior Temperature and Materials Suite (LITMS), also headed to the Schrödinger basin, is a suite of two instruments: the LITMS-LISTER pneumatic drill and the LITMS-LTC electrodes. This payload will investigate the heat flow and electrical conductivity of the lunar interior in the Schrödinger basin.",
+        "type": "Lunar Magnetotelluric Sounder and Heat Flow Probe + Sounder and Drill"
+      },
+      {
+        "name": "LuSEE-Lite",
+        "organization": "University of California, Berkeley",
+        "purpose": "LuSEE-Lite uses plasma wave measurements to characterize the lunar ionosphere and the interaction of the solar wind and magnetospheric plasma with the lunar surface and crustal magnetic fields. The payload uses DC electric and magnetic field measurements to study the conditions that control the electrostatic potential of the lunar surface.",
+        "type": "LuSEE-Lite is a suite of sensors and electronics designed to measure and characterize the electric and magnetic field environment of the lunar surface from DC to 20 MHz."
+      }
+    ],
+    "payloadCountReported": 3,
+    "objective": "FSS will return the agency's first seismic data from the far side of the Moon, helping scientists to understand tectonic activity there. This may reveal how often the lunar far side is impacted by small meteorites and provide new constraints on the internal structure of the Moon.",
+    "outcomeSummary": null,
+    "notes": "The USGS gazetteer entry is \"Schrödinger\" (a crater, Feature/5381); NASA's pages call it Schrödinger Basin. Lander name recorded as \"APEX 1.0\" from the source wording \"ispace-U.S. APEX®1.0 lunar lander\".",
+    "sources": [
+      { "label": "NASA CLPS Deliveries", "url": "https://science.nasa.gov/lunar-science/clps-deliveries/", "accessed": "2026-09-29" },
+      { "label": "NASA CLPS Deliveries — CP-12", "url": "https://science.nasa.gov/lunar-science/clps-deliveries/cp-12/", "accessed": "2026-09-29" },
+      { "label": "USGS Gazetteer — Schrödinger", "url": "https://planetarynames.wr.usgs.gov/Feature/5381", "accessed": "2026-09-29" }
+    ],
+    "lastVerified": "2026-09-29"
+  },
+  {
+    "id": "cs-3",
+    "name": "CS-3",
+    "taskOrder": "CS-3",
+    "provider": "Firefly",
+    "lander": "Blue Ghost 2",
+    "status": "upcoming",
+    "launchDate": null,
+    "launchDatePrecision": null,
+    "landingDate": null,
+    "landingDatePrecision": null,
+    "landingSite": {
+      "name": "lunar far side",
+      "latitude": null,
+      "longitude": null,
+      "region": "far side",
+      "coordinatesApproximate": true
+    },
+    "payloads": [
+      {
+        "name": "LuSEE-Night",
+        "organization": "Brookhaven National Lab and Lawrence Berkely Lab under DOE MIE",
+        "purpose": "LuSEE-Night is a sensitive radio detector that will measure the radio sky at frequencies below 50 MHz and act as pathfinder spectrometer for the measurement of the red-shifted 21 cm line remnant from the Big Bang.",
+        "type": "Radio telescope"
+      }
+    ],
+    "payloadCountReported": 3,
+    "objective": "The far side of the Moon is thought to be the best site for performing sensitive radio observations at low frequencies within the inner solar system. LuSEE-Night will test this hypothesis and potentially open a new wavelength window into our Universe.",
+    "outcomeSummary": null,
+    "notes": "The deliveries list heading is \"CS-3/4\"; the per-delivery page title says \"CS-3/4 Science\" and payload fields say \"CLPS CS-3\". The list says three payloads but only LuSEE-Night is detailed (docs/DATA_GAPS.md). The LuSEE-Night summary contains stale wording (\"Scheduled to land on the far side of the Moon in 2025\") — not recorded as a landing date; checked 2026-09-29. Landing site is only the region; no coordinates.",
+    "sources": [
+      { "label": "NASA CLPS Deliveries", "url": "https://science.nasa.gov/lunar-science/clps-deliveries/", "accessed": "2026-09-29" },
+      { "label": "NASA CLPS Deliveries — CS-3", "url": "https://science.nasa.gov/lunar-science/clps-deliveries/cs-3/", "accessed": "2026-09-29" }
+    ],
+    "lastVerified": "2026-09-29"
+  },
+  {
+    "id": "cp-21",
+    "name": "Blue Ghost Mission 3",
+    "taskOrder": "CP-21",
+    "provider": "Firefly",
+    "lander": "Blue Ghost 3",
+    "status": "upcoming",
+    "launchDate": null,
+    "launchDatePrecision": null,
+    "landingDate": null,
+    "landingDatePrecision": null,
+    "landingSite": {
+      "name": "Gruithuisen Domes",
+      "latitude": 36.56,
+      "longitude": -40.72,
+      "region": "near side",
+      "coordinatesApproximate": true
+    },
+    "payloads": [
+      {
+        "name": "Lunar-VISE (Lunar Vulkan Imaging and Spectroscopy Explorer)",
+        "organization": "University of Central Florida",
+        "purpose": "Remote sensing data indicates that the Gruithuisen Domes were created by magma rich in silica, but here on Earth, that requires oceans of liquid water and plate tectonics — two things the Moon doesn't have. To shed some light on this Moon mystery, we're sending Lunar-VISE, a suite of science payloads that will be affixed to a rover and a lander.",
+        "type": null
+      },
+      {
+        "name": "Heimdall",
+        "organization": "Planetary Science Institute",
+        "purpose": "Heimdall is a four-camera system that will be mounted on SAMPLR. It will analyze regolith during all mission stages, from landing to firmly planted and stable on the lunar surface.",
+        "type": null
+      },
+      {
+        "name": "SAMPLR (Sample Acquisition, Morphology Filtering, and Probing of Lunar Regolith)",
+        "organization": "Maxar Technologies",
+        "purpose": "SAMPLR is our lunar surface proxy. It will be the first US robotic arm on the Moon in more than 50 years.",
+        "type": null
+      },
+      {
+        "name": "NMLS (Neutron Measurements at the Lunar Surface)",
+        "organization": "Marshall Space Flight Center",
+        "purpose": "NMLS will determine the amount of neutron radiation at the surface of the Moon by measuring the thermal and epithermal count rates. This data will improve the accuracy of assessments we make based on data captured by sources like the Lunar Reconnaissance Orbiter and Lunar Prospector missions.",
+        "type": null
+      },
+      {
+        "name": "ROLSES (Radio wave Observation at the Lunar Surface of the photo-Electron Sheath)",
+        "organization": "Goddard Space Flight Center",
+        "purpose": "ROLSES will collect radio data from a low-frequency radio receiver system to determine the density of this electron sheath. Consisting of four antennas, the instrument is a low-frequency radio spectrometer to provide radio spectra (from 10 kHz - 10 MHz) ~0-2 m above the lunar surface.",
+        "type": null
+      },
+      {
+        "name": "PILS (Photovoltaic Investigation on the Lunar Surface)",
+        "organization": "Glenn Research Center",
+        "purpose": "PILS contains a small array of different solar technologies. We will collect data from each one, comparing the results to gain insight into the lunar environment's effects on charging capabilities and establishing which solar array types perform more effectively and efficiently while maintaining operability.",
+        "type": null
+      }
+    ],
+    "payloadCountReported": 6,
+    "objective": "Firefly's Blue Ghost 3 lander will deliver six NASA science payloads to the Gruithuisen Domes which provide invaluable data to the lunar science community by addressing topics like regolith behavior, interior composition, and more.",
+    "outcomeSummary": null,
+    "notes": "\"Gruithuisen Domes\" is not a single USGS gazetteer entry; it names two features: Mons Gruithuisen Gamma (center 36.56, -40.72) and Mons Gruithuisen Delta (center 36.07, -39.59). The map marker uses the Gamma center and is approximate; both feature pages are cited. The mission name \"Blue Ghost Mission 3\" comes from the deliveries-list image alt text.",
+    "sources": [
+      { "label": "NASA CLPS Deliveries", "url": "https://science.nasa.gov/lunar-science/clps-deliveries/", "accessed": "2026-09-29" },
+      { "label": "NASA CLPS Deliveries — CP-21", "url": "https://science.nasa.gov/lunar-science/clps-deliveries/cp-21-science/", "accessed": "2026-09-29" },
+      { "label": "USGS Gazetteer — Mons Gruithuisen Gamma", "url": "https://planetarynames.wr.usgs.gov/Feature/3982", "accessed": "2026-09-29" },
+      { "label": "USGS Gazetteer — Mons Gruithuisen Delta", "url": "https://planetarynames.wr.usgs.gov/Feature/3981", "accessed": "2026-09-29" }
+    ],
+    "lastVerified": "2026-09-29"
+  },
+  {
+    "id": "cp-22",
+    "name": "IM-4",
+    "taskOrder": "CP-22",
+    "provider": "Intuitive Machines",
+    "lander": "Nova-C",
+    "status": "upcoming",
+    "launchDate": null,
+    "launchDatePrecision": null,
+    "landingDate": null,
+    "landingDatePrecision": null,
+    "landingSite": {
+      "name": "Mons Mouton",
+      "latitude": -84.6,
+      "longitude": 31.0,
+      "region": "south polar",
+      "coordinatesApproximate": true
+    },
+    "payloads": [
+      {
+        "name": "LEIA (Lunar Explorer Instrument for space biology Applications)",
+        "organization": "NASA Ames Research Center",
+        "purpose": "LEIA will house yeast cells along with three small payloads that scientists can use to remotely monitor the yeast. One will nourish the cells and measure the responses, another will measure their radiation exposure, and a third will measure radiation levels on the lunar surface.",
+        "type": null
+      },
+      {
+        "name": "PROSPECT (Package for Resource Observation and in-Situ Prospecting for Exploration, Commercial exploitation and Transportation)",
+        "organization": "European Space Agency (ESA)",
+        "purpose": "PROSPECT, developed by the European Space Agency (ESA), is much more than an ordinary drill; it's a highly advanced multi-function tool used to capture images of the surrounding area, pierce the rough lunar surface, measure depth temperatures, extract material samples, and analyze the materials during and after drilling.",
+        "type": null
+      },
+      {
+        "name": "L-CIRiS (Lunar Compact Infrared Imaging System)",
+        "organization": "University of Colorado",
+        "purpose": "L-CIRiS is a multispectral imaging radiometer, which is basically a substance-identifier, thermal camera, and regular camera rolled into one. It will perform 360° panoramic scans and provide in-depth analysis of the surroundings, measuring temperatures and mineral composition at an unprecedented resolution.",
+        "type": null
+      },
+      {
+        "name": "SEAL (Surface and Exosphere Alterations by Landers)",
+        "organization": "NASA Goddard Space Flight Center",
+        "purpose": "It will analyze regolith (think of it like \"Moon dirt\") before, during, and after descent. It works like a molecular detector that can \"sniff out\" different gases and particles by their unique signatures by measuring changes in heat, chemical exhaust, and physical behavior.",
+        "type": null
+      },
+      {
+        "name": "MAG (Fluxgate Magnetometer)",
+        "organization": "NASA Goddard Space Flight Center",
+        "purpose": "A Fluxgate Magnetometer (MAG) measures the magnetic field of a planetary body like the Earth or Moon. It essentially acts as a high-tech compass, but instead of using a magnetized needle to point you home, it has a magnetically sensitive core wrapped in sets of coils to provide precise measurements.",
+        "type": null
+      },
+      {
+        "name": "LRA (Laser Retroreflector Array)",
+        "organization": "GSFC",
+        "purpose": "The Laser Retroreflector Array (LRA) is the ultimate sidekick to any lunar surface payload. LRA uses reflected laser light from orbiting spacecraft to determine its exact location, including a precise distance to Earth.",
+        "type": null
+      }
+    ],
+    "payloadCountReported": 6,
+    "objective": "CP-22 will set up camp in this lunar science wonderland, where its payloads will collect data on everything from the Moon's history to its material composition to human habitability.",
+    "outcomeSummary": null,
+    "notes": "Mission name \"IM-4\" and lander wording from the per-delivery page (\"The Intuitive Machines Nova-C lander (IM-4)\").",
+    "sources": [
+      { "label": "NASA CLPS Deliveries", "url": "https://science.nasa.gov/lunar-science/clps-deliveries/", "accessed": "2026-09-29" },
+      { "label": "NASA CLPS Deliveries — CP-22", "url": "https://science.nasa.gov/lunar-science/clps-deliveries/cp-22-science/", "accessed": "2026-09-29" },
+      { "label": "USGS Gazetteer — Mons Mouton", "url": "https://planetarynames.wr.usgs.gov/Feature/16070", "accessed": "2026-09-29" }
+    ],
+    "lastVerified": "2026-09-29"
+  },
+  {
+    "id": "ct-3",
+    "name": "CT-3",
+    "taskOrder": "CT-3",
+    "provider": "Blue Origin",
+    "lander": "Blue Moon Mark 1 (MK1)",
+    "status": "upcoming",
+    "launchDate": null,
+    "launchDatePrecision": null,
+    "landingDate": null,
+    "landingDatePrecision": null,
+    "landingSite": {
+      "name": "lunar south pole",
+      "latitude": null,
+      "longitude": null,
+      "region": "south polar",
+      "coordinatesApproximate": true
+    },
+    "payloads": [
+      {
+        "name": "SCALPSS 1.x (Stereo Cameras for Lunar Plume-Surface Studies)",
+        "organization": "LaRC",
+        "purpose": "SCALPSS 1.x is an array of high-resolution cameras that will collect imagery during descent. In addition to providing information about regolith reaction to high-power lander thrust, the stereographic photogrammetry will produce overlapping images that will allow researchers to construct a 3D view of the surface.",
+        "type": null
+      },
+      {
+        "name": "LRA (Laser Retroreflector Array)",
+        "organization": "GSFC",
+        "purpose": "The Laser Retroreflector Array (LRA) is the ultimate sidekick to any lunar surface payload. LRA uses reflected laser light from orbiting spacecraft to determine its exact location, enabling an indirect measurement of a precise distance to Earth.",
+        "type": null
+      }
+    ],
+    "payloadCountReported": 2,
+    "objective": "Our science payloads on CT-3 will provide thorough descent data that will benefit future lunar exploration missions for years to come. CT-3 will collect critical science at the lunar south pole, paving the way for future NASA exploration and science missions to the area.",
+    "outcomeSummary": null,
+    "notes": "Landing site is only the region; no coordinates (the source says \"the lunar south pole\").",
+    "sources": [
+      { "label": "NASA CLPS Deliveries", "url": "https://science.nasa.gov/lunar-science/clps-deliveries/", "accessed": "2026-09-29" },
+      { "label": "NASA CLPS Deliveries — CT-3", "url": "https://science.nasa.gov/lunar-science/clps-deliveries/ct-3-science/", "accessed": "2026-09-29" }
+    ],
+    "lastVerified": "2026-09-29"
+  },
+  {
+    "id": "cs-6",
+    "name": "Blue Ghost Mission 4",
+    "taskOrder": "CS-6",
+    "provider": "Firefly Aerospace",
+    "lander": "Blue Ghost 4",
+    "status": "upcoming",
+    "launchDate": null,
+    "launchDatePrecision": null,
+    "landingDate": null,
+    "landingDatePrecision": null,
+    "landingSite": {
+      "name": "lunar south pole",
+      "latitude": null,
+      "longitude": null,
+      "region": "south polar",
+      "coordinatesApproximate": true
+    },
+    "payloads": [
+      {
+        "name": "LIMS (Laser Ablations Ionization Mass Spectrometer)",
+        "organization": "University of Bern",
+        "purpose": "LIMS will collect surface material, use unique pulsed laser technology to create charged particles, and analyze the particles in-situ (meaning \"right there on the lunar surface\"). The results will reveal chemical compositions and material properties of the lunar regolith.",
+        "type": null
+      },
+      {
+        "name": "MoonRanger",
+        "organization": "Astrobotic",
+        "purpose": "MoonRanger is a compact rover, roughly about the size of a suitcase. It will carry a neutron spectrometer capable of detecting hydrogen in lunar soil up to 1 meter deep.",
+        "type": null
+      },
+      {
+        "name": "SCALPSS (Stereo Cameras for Lunar Plume-Surface Studies)",
+        "organization": "LaRC",
+        "purpose": "SCALPSS 1.x is an array of high-resolution cameras that will collect imagery during descent and after landing. In addition to providing information about regolith reaction to high-power lander thrust, the stereographic photogrammetry will produce overlapping images that will allow researchers to construct a 3D view of the surface.",
+        "type": null
+      },
+      {
+        "name": "LRA (Laser Retroreflector Array)",
+        "organization": "GSFC",
+        "purpose": "The Laser Retroreflector Array (LRA) is the ultimate sidekick to any lunar surface payload suite. LRA uses reflected laser light from orbiting spacecraft to determine its exact location, enabling an indirect measurement of a precise distance to Earth.",
+        "type": null
+      }
+    ],
+    "payloadCountReported": 4,
+    "objective": "The lunar south pole's coldest shadowed regions are hypothesized to contain lunar ice near some of the oldest materials on the lunar surface.",
+    "outcomeSummary": null,
+    "notes": "Landing site is only the region; no coordinates (the source says \"the lunar south pole\").",
+    "sources": [
+      { "label": "NASA CLPS Deliveries", "url": "https://science.nasa.gov/lunar-science/clps-deliveries/", "accessed": "2026-09-29" },
+      { "label": "NASA CLPS Deliveries — CS-6", "url": "https://science.nasa.gov/lunar-science/programs/clps/cs-6-science/", "accessed": "2026-09-29" }
+    ],
+    "lastVerified": "2026-09-29"
+  },
+  {
+    "id": "ct-4",
+    "name": "CT-4",
+    "taskOrder": "CT-4",
+    "provider": "Intuitive Machines",
+    "lander": "Nova-D",
+    "status": "upcoming",
+    "launchDate": null,
+    "launchDatePrecision": null,
+    "landingDate": null,
+    "landingDatePrecision": null,
+    "landingSite": {
+      "name": "lunar south pole",
+      "latitude": null,
+      "longitude": null,
+      "region": "south polar",
+      "coordinatesApproximate": true
+    },
+    "payloads": [],
+    "payloadCountReported": 6,
+    "objective": "The Intuitive Machines Nova-D lander will deliver six NASA CLPS science payloads to the lunar south pole.",
+    "outcomeSummary": null,
+    "notes": "Deliveries-list entry only — no per-delivery page exists yet (checked 2026-09-29); payload details unknown.",
+    "sources": [
+      { "label": "NASA CLPS Deliveries", "url": "https://science.nasa.gov/lunar-science/clps-deliveries/", "accessed": "2026-09-29" }
+    ],
+    "lastVerified": "2026-09-29"
+  },
+  {
+    "id": "cs-8",
+    "name": "CS-8",
+    "taskOrder": "CS-8",
+    "provider": null,
+    "lander": null,
+    "status": "upcoming",
+    "launchDate": null,
+    "launchDatePrecision": null,
+    "landingDate": null,
+    "landingDatePrecision": null,
+    "landingSite": null,
+    "payloads": [],
+    "payloadCountReported": null,
+    "objective": "CS-8 will deliver Moon Base payloads to the lunar surface.",
+    "outcomeSummary": null,
+    "notes": "Deliveries-list entry only. Vendor not announced on the source → provider and lander left empty per the schema's unknown-values rule (flagged in docs/DECISIONS.md D-013). No payload, date, or site details given.",
+    "sources": [
+      { "label": "NASA CLPS Deliveries", "url": "https://science.nasa.gov/lunar-science/clps-deliveries/", "accessed": "2026-09-29" }
+    ],
+    "lastVerified": "2026-09-29"
+  },
+  {
+    "id": "cx-2",
+    "name": "CX-2",
+    "taskOrder": "CX-2",
+    "provider": null,
+    "lander": null,
+    "status": "upcoming",
+    "launchDate": null,
+    "launchDatePrecision": null,
+    "landingDate": null,
+    "landingDatePrecision": null,
+    "landingSite": null,
+    "payloads": [],
+    "payloadCountReported": null,
+    "objective": "CX-2 will deliver one or more Lunar Terrain Vehicles to support the development of NASA's Moon Base to the lunar surface.",
+    "outcomeSummary": null,
+    "notes": "Deliveries-list entry only. Technology delivery (Lunar Terrain Vehicles, exploration cargo) rather than science payloads. Vendor not announced on the source → provider and lander left empty per the schema's unknown-values rule (flagged in docs/DECISIONS.md D-013). \"One or more\" is not a count → payload count left empty.",
+    "sources": [
+      { "label": "NASA CLPS Deliveries", "url": "https://science.nasa.gov/lunar-science/clps-deliveries/", "accessed": "2026-09-29" }
+    ],
+    "lastVerified": "2026-09-29"
+  }
+]

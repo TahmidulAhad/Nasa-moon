@@ -1,0 +1,6 @@
+@NasaMoon.Api_HostAddress = http://localhost:5083
+
+GET {{NasaMoon.Api_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
