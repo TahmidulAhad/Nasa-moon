@@ -1,8 +1,7 @@
 # NASA Moon — ASP.NET Core Backend
 
 Backend for the **CLPS Lunar Mission Browser** (`Nasa-moon` frontend), built with
-**ASP.NET Core 8 + Entity Framework Core + PostgreSQL (Neon)** in **Clean Architecture**,
-mirroring the `TahmidulAhad/twitter-clone` layout.
+**ASP.NET Core 8 + Entity Framework Core + PostgreSQL (Neon)** in **Clean Architecture**
 
 ## Structure
 
